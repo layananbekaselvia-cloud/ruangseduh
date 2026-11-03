@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ruang Seduh – Kedai Tenang Para Guru</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+<style>
+:root{--esp:#2a1a12;--mid:#4a2e1f;--cream:#f7ecd8;--latte:#d9b48a;--car:#f0a43a;--teal:#18c2b0;--cher:#ec5565;--ink:#1a0f09}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font-family:'Fredoka',sans-serif;color:var(--cream);background:var(--esp) radial-gradient(#3a2418 2px,transparent 2px) 0 0/26px 26px;padding-top:env(safe-area-inset-top,0)}
+header{display:flex;align-items:center;gap:8px;padding:10px 14px;position:sticky;top:0;z-index:5;background:var(--esp);border-bottom:4px solid var(--ink)}
+header h1{font-family:Bangers;font-size:30px;letter-spacing:2px;margin:0;flex:1;color:var(--car);text-shadow:3px 3px 0 var(--ink)}
+main{padding:14px 14px 110px;max-width:920px;margin:auto}
+.card{background:var(--cream);color:var(--ink);border:3px solid var(--ink);border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:5px 5px 0 var(--ink);animation:pop .35s}
+@keyframes pop{from{opacity:0;transform:scale(.94) translateY(14px)}}
+h2,h3{font-family:Bangers;letter-spacing:1px;margin:.1em 0 .4em;font-size:26px}h3{font-size:21px;color:var(--mid)}
+.card h2{color:var(--cher);text-shadow:2px 2px 0 var(--latte)}
+input,select,textarea{width:100%;padding:9px 10px;margin:3px 0 8px;border:3px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-weight:500}
+label{font-size:12px;font-weight:700;color:var(--mid)}
+button{font-family:Fredoka;font-weight:700;font-size:14px;border:3px solid var(--ink);border-radius:12px;padding:8px 13px;cursor:pointer;color:var(--ink);background:var(--car);box-shadow:3px 3px 0 var(--ink);margin:3px;transition:.1s}
+button:active{transform:translate(3px,3px);box-shadow:none}
+button.g{background:var(--latte)}button.t{background:var(--teal)}button.r{background:var(--cher);color:#fff}
+.row{display:flex;gap:8px;flex-wrap:wrap}.row>*{flex:1;min-width:120px}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;overflow-x:auto;background:var(--cream);border-top:4px solid var(--ink);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0));z-index:6}
+nav button{flex:1;min-width:66px;background:none;box-shadow:none;border:3px solid transparent;font-size:11px;padding:4px}
+nav button b{display:block;font-size:22px}nav button.on{background:var(--car);border-color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.chip{display:inline-block;padding:1px 9px;border:2px solid var(--ink);border-radius:99px;background:var(--latte);font-size:12px;font-weight:600;margin:2px}
+table{width:100%;border-collapse:collapse;font-size:12px}th,td{border:2px solid var(--ink);padding:3px;text-align:center}th{background:var(--car)}td.n{text-align:left;white-space:nowrap;font-weight:700;background:#fff}
+.sc{overflow-x:auto}.c{cursor:pointer;min-width:24px;font-weight:700;background:#fff}.c-S{background:#ffe27a}.c-I{background:#9fd8ff}.c-A{background:var(--cher);color:#fff}.c-lib{background:#ff9aa5}
+.bar{display:flex;align-items:flex-end;gap:6px;height:130px;padding-top:8px}.bar div{flex:1;text-align:center;font-size:10px;font-weight:700}
+.bar i{display:block;background:var(--teal);border:2px solid var(--ink);border-radius:6px 6px 0 0;min-height:3px}
+.paper{background:#fff;border:2px dashed var(--mid);padding:14px;border-radius:8px;font-size:13px;overflow-x:auto}
+.mascot{text-align:center;font-size:62px;position:relative;animation:wob 3s infinite}.mascot s{position:absolute;top:-8px;left:50%;font-size:22px;text-decoration:none;opacity:0;animation:st 2.4s infinite}.mascot s+s{margin-left:16px;animation-delay:1.2s}
+@keyframes st{0%{opacity:0;transform:translateY(14px)}50%{opacity:.8}100%{opacity:0;transform:translateY(-18px)}}@keyframes wob{50%{transform:rotate(-4deg)}}
+.q{text-align:center;font-weight:600;color:var(--mid)}
+img.ft{max-width:100%;border:3px solid var(--ink);border-radius:12px}
+#toast{position:fixed;top:70px;left:50%;transform:translateX(-50%);background:var(--car);color:var(--ink);border:3px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:8px 16px;border-radius:99px;font-weight:700;display:none;z-index:20}
+#modal{position:fixed;inset:0;background:#000b;display:none;align-items:center;justify-content:center;z-index:30;padding:20px}
+pre{white-space:pre-wrap;font-size:11px;background:var(--esp);color:var(--cream);padding:10px;border-radius:10px;max-height:240px;overflow:auto}
+</style></head><body>
+<header><span style="font-size:26px">☕</span><h1>RUANG SEDUH</h1><button class="g" onclick="kopi()">☕ Traktir Kopi</button><button class="r" id="out" onclick="location.reload()" style="display:none">Keluar</button></header>
+<main id="m"></main><nav id="nav" style="display:none"></nav><div id="toast"></div>
+<div id="modal" onclick="this.style.display='none'"><div class="card" style="max-width:320px;text-align:center"><div class="mascot">☕<s>〰</s><s>〰</s></div><h2>Traktir kopi untuk owner</h2><p id="ew" style="font-weight:700"></p><small>Ketuk di mana saja untuk menutup</small></div></div>
+<script type="text/plain" id="gs">var P=PropertiesService.getScriptProperties();
+function doGet(e){var k=e.parameter.k;if(bad(k))return J(null);
+if(k=='murid'){var t=SpreadsheetApp.getActive().getSheetByName('Murid');if(t&&t.getLastRow()>1)return J(t.getDataRange().getDisplayValues().slice(1).filter(function(r){return r[0]}).map(function(r){return{nama:r[0],kelas:r[1],tgl:r[2],jk:r[3],agama:r[4]}}))}
+return J(rd(k))}
+function doPost(e){var p=e.parameter,l=LockService.getScriptLock(),got=false;try{if(e.postData&&String(e.postData.type).indexOf('text/plain')==0&&e.postData.contents.charAt(0)=='{')p=JSON.parse(e.postData.contents);if(p.a=='ai')return J(ai(p));l.waitLock(20000);got=true;if(p.a)return J(run(p));if(bad(p.k))throw'Dilarang';wr(p.k,p.v);return J('ok')}catch(x){return J({e:String(x.message||x)})}finally{if(got)l.releaseLock()}}
+function bad(k){k=String(k);return k=='sekolah'||k.indexOf('guru:')==0||k.indexOf('rhs:')==0}
+var SHW=['Kepala Sekolah','Waka Kesiswaan','Wali Kelas','Guru BK lain'];
+function canSee(i,me){var sh=i.share||[],r=me.roles||[];return(sh.indexOf('Kepala Sekolah')>=0&&r.indexOf('Kepala Sekolah')>=0)||(sh.indexOf('Waka Kesiswaan')>=0&&r.indexOf('Waka Kesiswaan')>=0)||(sh.indexOf('Guru BK lain')>=0&&r.indexOf('Guru BK')>=0)||(sh.indexOf('Wali Kelas')>=0&&r.indexOf('Wali Kelas')>=0&&i.kelas&&i.kelas==me.kelasWali)}
+function sh(){var s=SpreadsheetApp.getActive();return s.getSheetByName('Data')||s.insertSheet('Data')}
+function rd(k){var d=sh().getDataRange().getValues();for(var i=0;i<d.length;i++)if(d[i][0]==k){var t=d[i].slice(1).join('');return t?JSON.parse(t):null}return null}
+function wr(k,v){v=typeof v=='string'?v:JSON.stringify(v);var s=sh(),d=s.getDataRange().getValues(),c=[k];for(var j=0;j<v.length;j+=45000)c.push(v.substr(j,45000));
+for(var i=0;i<d.length;i++)if(d[i][0]==k){s.getRange(i+1,1,1,s.getMaxColumns()).clearContent();s.getRange(i+1,1,1,c.length).setValues([c]);return}s.appendRow(c)}
+function J(o){return ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON)}
+function hx(s){return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,s).map(function(b){return('0'+(b&255).toString(16)).slice(-2)}).join('')}
+function H(id,pin){return hx('rs|'+id+'|'+pin)}
+function np(n){var c='ABCDEFGHJKMNPQRSTUVWXYZ23456789',s='';for(var i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+function reg(){return rd('sekolah')||[]}
+function pub(g){var c={};for(var k in g)if(k!='ph')c[k]=g[k];c.hasPin=!!g.ph;return c}
+function tok(o){var t=np(24);CacheService.getScriptCache().put('t'+t,JSON.stringify(o),21600);return t}
+function ses(t){var v=t&&CacheService.getScriptCache().get('t'+t);if(!v)throw'Sesi habis, silakan masuk lagi';return JSON.parse(v)}
+function info(x,o){return{t:tok(o),id:x.id,url:x.url,nama:x.nama,wa:x.wa,ksNama:x.ksNama,ksNip:x.ksNip}}
+function run(p){var a=p.a,r,g,x,q,s,sid,pin;
+if(a=='list')return reg().filter(function(i){return i.status=='aktif'}).map(function(i){return{id:i.id,nama:i.nama,wa:i.wa}});
+if(a=='daftarSekolah'){if(!p.nama||!p.w)throw'Data kurang';r=reg();r.push({id:np(6).toLowerCase(),nama:p.nama,adminNama:p.adm,wa:p.w,status:'pending',ph:'',url:'',ksNama:'',ksNip:''});wr('sekolah',r);return'ok'}
+if(a=='ownerLogin'){if(!p.oc||p.oc!=P.getProperty('OWNER_CODE'))throw'Kode salah';return{t:tok({r:'owner'})}}
+if(a=='adminLogin'){x=reg().filter(function(i){return i.id==p.sid})[0];if(!x||x.status!='aktif'||!x.ph||x.ph!=H(x.id,p.pin))throw'PIN admin salah atau sekolah belum aktif';return info(x,{r:'admin',sid:x.id})}
+if(a=='guruDaftar'){x=reg().filter(function(i){return i.id==p.sid})[0];if(!x||x.status!='aktif')throw'Sekolah tidak aktif';q=JSON.parse(p.d);if(!q.nip||!q.nama)throw'Data kurang';g=rd('guru:'+x.id)||[];if(g.some(function(i){return i.nip==q.nip}))throw'NIP sudah terdaftar';
+g.push({nip:String(q.nip),nama:q.nama,wa:q.wa||'',ph:'',status:'pending',roles:q.roles||[],kelasWali:q.kelasWali||'',kelas:q.kelas||'',piket:q.piket||''});wr('guru:'+x.id,g);return'ok'}
+if(a=='guruLogin'){x=reg().filter(function(i){return i.id==p.sid})[0];if(!x||x.status!='aktif')throw'Sekolah tidak aktif';g=(rd('guru:'+x.id)||[]).filter(function(i){return i.nip==p.nip})[0];
+if(!g||!g.ph||g.ph!=H(x.id+':'+g.nip,p.pin))throw'NIP/PIN salah';if(g.status!='aktif')throw'Akun belum aktif, hubungi admin sekolah';r=info(x,{r:'guru',sid:x.id,nip:g.nip});r.u=pub(g);return r}
+s=ses(p.t);
+if(a=='guruProfil'){if(s.r!='guru')throw'Dilarang';q=JSON.parse(p.d);g=rd('guru:'+s.sid)||[];var pend=false;g.forEach(function(i){if(i.nip==s.nip){var PV=['Kepala Sekolah','Waka Kesiswaan','Guru BK'];(q.roles||[]).forEach(function(r){if(PV.indexOf(r)>=0&&(i.roles||[]).indexOf(r)<0)pend=true});i.roles=q.roles||[];i.kelasWali=q.kelasWali||'';i.kelas=q.kelas||'';i.piket=q.piket||'';if(pend)i.status='pending'}});wr('guru:'+s.sid,g);return{pending:pend}}
+if(a=='rhsSave'||a=='rhsList'||a=='rhsShare'||a=='gStat'){if(s.r!='guru')throw'Dilarang';g=rd('guru:'+s.sid)||[];var me=g.filter(function(i){return i.nip==s.nip})[0];if(!me||me.status!='aktif')throw'Akun tidak aktif';
+ if(a=='gStat'){if(me.roles.indexOf('Kepala Sekolah')<0)throw'Dilarang';var c={aktif:0,pending:0,nonaktif:0,peran:{}};g.forEach(function(i){c[i.status]=(c[i.status]||0)+1;if(i.status=='aktif')(i.roles||[]).forEach(function(r){c.peran[r]=(c.peran[r]||0)+1})});return c}
+ var R=rd('rhs:'+s.sid)||[],sh;
+ if(a=='rhsSave'){if(me.roles.indexOf('Guru BK')<0)throw'Hanya Guru BK yang bisa menyimpan catatan rahasia';q=JSON.parse(p.d);q.share=(q.share||[]).filter(function(z){return SHW.indexOf(z)>=0});if(q.share.length&&!q.alasan)throw'Alasan keadaan khusus wajib diisi';q.id=Date.now();q.nip=me.nip;q.oleh=me.nama;R.push(q);wr('rhs:'+s.sid,R);return{id:q.id}}
+ if(a=='rhsShare'){sh=JSON.parse(p.share).filter(function(z){return SHW.indexOf(z)>=0});if(sh.length&&!p.alasan)throw'Alasan keadaan khusus wajib diisi';R.forEach(function(i){if(i.id==p.id&&i.nip==me.nip){i.share=sh;i.alasan=p.alasan||''}});wr('rhs:'+s.sid,R);return'ok'}
+ return R.filter(function(i){return i.nip==me.nip||canSee(i,me)})}
+if(s.r=='guru')throw'Dilarang';
+if(s.r=='owner'){r=reg();
+ if(a=='oList')return r.map(pub);
+ if(a=='oAdd'){pin='ADM-'+np(6);x={id:np(6).toLowerCase(),nama:p.nama,adminNama:'',wa:'',status:'aktif',ph:'',url:'',ksNama:'',ksNip:''};x.ph=H(x.id,pin);r.push(x);wr('sekolah',r);return{id:x.id,pin:pin}}
+ if(a=='oSt'||a=='oReset'){x=r.filter(function(i){return i.id==p.id})[0];if(!x)throw'Sekolah tidak ada';pin=null;
+  if(a=='oSt'){if(['aktif','nonaktif','pending'].indexOf(p.st)<0)throw'Status tidak valid';x.status=p.st}
+  if(a=='oReset'||(p.st=='aktif'&&!x.ph)){pin='ADM-'+np(6);x.ph=H(x.id,pin)}
+  wr('sekolah',r);return{pin:pin}}}
+sid=s.r=='admin'?s.sid:p.sid;
+if(a=='sSet'){r=reg();x=r.filter(function(i){return i.id==sid})[0];if(!x)throw'Sekolah tidak ada';if(p.url&&p.url.indexOf('https://script.google.com/')!=0)throw'URL harus dari script.google.com';x.wa=p.wa;x.url=p.url;x.ksNama=p.ksNama;x.ksNip=p.ksNip;wr('sekolah',r);return'ok'}
+g=rd('guru:'+sid)||[];
+if(a=='gList')return g.map(pub);
+if(a=='gAdd'){q=JSON.parse(p.d);if(g.some(function(i){return i.nip==q.nip}))throw'NIP sudah ada';pin=np(8);g.push({nip:String(q.nip),nama:q.nama,wa:q.wa||'',ph:H(sid+':'+q.nip,pin),status:'aktif',roles:q.roles||[],kelasWali:'',kelas:'',piket:''});wr('guru:'+sid,g);return{pin:pin}}
+x=g.filter(function(i){return i.nip==p.nip})[0];if(!x)throw'Guru tidak ada';pin=null;
+if(a=='gSet'){if(['aktif','nonaktif','pending'].indexOf(p.st)<0)throw'Status tidak valid';x.status=p.st;if(p.st=='aktif'&&!x.ph){pin=np(8);x.ph=H(sid+':'+x.nip,pin)}}
+else if(a=='gReset'){pin=np(8);x.ph=H(sid+':'+x.nip,pin)}else throw'Aksi tidak dikenal';
+wr('guru:'+sid,g);return{pin:pin}}
+function ai(p){var s=ses(p.t),sid=s.sid||'owner',lim=+(P.getProperty('AI_LIMIT_'+sid)||P.getProperty('AI_LIMIT')||60),v=(P.getProperty('ai:'+sid)||'').split(':'),dd=Utilities.formatDate(new Date(),'Asia/Jakarta','yyyyMMdd'),n=v[0]==dd?+v[1]:0;if(n>=lim)throw'Batas pemakaian AI harian sekolah tercapai ('+lim+'x). Coba lagi besok.';P.setProperty('ai:'+sid,dd+':'+(n+1));var pr=P,key=pr.getProperty('GEMINI_KEY'),m=pr.getProperty('GEMINI_MODEL')||'gemini-3.8-flash';if(!key)throw'GEMINI_KEY belum diisi di Script Properties';
+for(var i=0;i<3;i++){var r=UrlFetchApp.fetch('https://generativelanguage.googleapis.com/v1beta/models/'+m+':generateContent?key='+key,{method:'post',contentType:'application/json',payload:JSON.stringify({contents:[{parts:[{text:p.p}]}]}),muteHttpExceptions:true});
+var j=JSON.parse(r.getContentText());if(j.candidates&&j.candidates.length)return{t:j.candidates[0].content.parts[0].text};
+if(r.getResponseCode()!=503&&r.getResponseCode()!=429)throw(j.error&&j.error.message)||'ditolak';Utilities.sleep(3000)}throw'AI sibuk, coba lagi'}
+</script>
+<script>
+// ====== KONFIGURASI OWNER ======
+const OWNER_URL="https://script.google.com/macros/s/AKfycbxyPzw0p22mX20lq_qp9yz3YLPDX7NH3iuTRRBp0epLfNhCZDmiMCyckwjJkjelAvoV/exec";                  // WAJIB: URL Web App Apps Script OWNER (registry sekolah, login, AI)
+const TEMPLATE_URL="https://docs.google.com/spreadsheets/d/1WvapR1SX269CQjLtHzf2GbWCSK9WL2zY3DowwQQAEVg/copy";               // link /copy Sheet Template Mitra
+const OWNER_WA="6281253895699";
+const KOPI_URL="https://app.u.shopeepay.co.id/u/WgJ6p3nsnBPpTubBb8Ys3";
+// Kode owner & API key AI ada di Script Properties (OWNER_CODE, GEMINI_KEY), BUKAN di file ini.
+// ===============================
+const $=s=>document.querySelector(s);
+const E=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const HARI=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const today=()=>new Date().toISOString().slice(0,10);
+const PERAN=['Wali Kelas','Guru Mapel','Guru BK','Kepala Sekolah','Waka Kesiswaan','Waka Kurikulum','Sarpras','Tata Usaha'];
+const JENIS=['Terlambat','Bolos pelajaran','Berkelahi','Perundungan (bullying)','Atribut/seragam tidak sesuai','Membawa HP/benda terlarang','Merokok/vape','Keluar kelas tanpa izin','Merusak fasilitas','Tidak mengerjakan tugas'];
+const TIND=['Pendekatan persuasif','Teguran lisan','Panggilan orang tua','Mediasi','Surat Peringatan (SP) 1','Surat Peringatan (SP) 2','Surat Peringatan (SP) 3','Pembinaan/tugas edukatif','Solusi AI'];
+const QUOTES=['Tenang dulu. Seduh dulu. Baru urus dunia.','Dunia ramai, kopi tetap setia.','Introvert ber-baterai kopi.','Nyentrik itu bukan aneh, itu single origin.','Pelan-pelan, yang penting terseduh.'];
+let REG=[],D={},S={},mem={},PINS={};
+const toast=t=>{const x=$('#toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',3000)};
+const kopi=()=>{$('#ew').innerHTML=`<a href="${KOPI_URL}" target="_blank" rel="noopener"><button>☕ Traktir via ShopeePay</button></a>`;$('#modal').style.display='flex'};
+const wa=(n,t)=>`https://wa.me/${String(n).replace(/\D/g,'')}?text=${encodeURIComponent(t)}`;
+function ls(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem('rs_'+k));localStorage.setItem('rs_'+k,JSON.stringify(v))}catch(e){if(v===undefined)return mem[k];mem[k]=v}}
+// ===== API ke Apps Script owner (login, akun, AI) =====
+const jeda=ms=>new Promise(r=>setTimeout(r,ms));
+async function api(a,o={}){if(!OWNER_URL)throw new Error('OWNER_URL belum diisi di file HTML');
+for(let n=1;n<=2;n++){let r;const b={a};if(S.t)b.t=S.t;for(const k in o)b[k]=typeof o[k]=='object'?JSON.stringify(o[k]):o[k];
+try{r=await fetch(OWNER_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(b)})}catch(e){if(n<2){await jeda(1500);continue}throw new Error('Tidak bisa terhubung ke server. Cek deploy Apps Script (akses "Anyone") lalu coba lagi.')}
+let j;try{j=await r.json()}catch(e){throw new Error('Server membalas halaman galat. Cek menu Executions di Apps Script.')}
+if(j&&j.e)throw new Error(j.e);return j}}
+async function T(p){try{return await p}catch(e){toast(e.message);return null}}
+// ===== Data sekolah di Sheet milik sekolah (URL diberikan server setelah login) =====
+async function get(sid,k){if(S.url){try{const r=await fetch(S.url+'?k='+k),j=await r.json();if(j!=null){ls(sid+k,j);return j}}catch(e){}}return ls(sid+k)}
+function put(sid,k,v){ls(sid+k,v);if(S.url){const f=new FormData();f.append('k',k);f.append('v',JSON.stringify(v));fetch(S.url,{method:'POST',body:f}).catch(()=>toast('Gagal sinkron ke Sheets'))}}
+const save=k=>put(S.sid,k,D[k]);
+async function loadSchool(sid){D={};for(const k of['murid','absen','kasus','dok','info','sarpras','osis','agenda','tamu'])D[k]=await get(sid,k)||[];D.rekap=await get(sid,'rekap')||{};D.kop=await get(sid,'kop')||{}}
+async function panggilAI(p){const r=await api('ai',{p});return r.t}
+// ===== unduh JPG / PDF =====
+async function dl(id,type,name){toast('Menyeduh file…');const c=await html2canvas(document.getElementById(id),{scale:2,backgroundColor:'#fff'});
+if(type=='jpg'){const a=document.createElement('a');a.href=c.toDataURL('image/jpeg',.92);a.download=name+'.jpg';a.click();return}
+const L=c.width>c.height,W=L?297:210,H=L?210:297,p=new window.jspdf.jsPDF(L?'l':'p','mm','a4'),ph=Math.floor(c.width*H/W);
+for(let o=0;o<c.height;o+=ph){const s=document.createElement('canvas');s.width=c.width;s.height=Math.min(ph,c.height-o);s.getContext('2d').drawImage(c,0,o,c.width,s.height,0,0,c.width,s.height);if(o)p.addPage();p.addImage(s.toDataURL('image/jpeg',.9),'JPEG',0,0,W,s.height*W/c.width)}
+p.save(name+'.pdf')}
+const dlb=(id,n)=>`<button class="g" onclick="dl('${id}','jpg','${n}')">🖼️ JPG</button><button class="g" onclick="dl('${id}','pdf','${n}')">📄 PDF</button>`;
+function foto(file,cb){const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,480/im.width),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.5))};im.src=r.result};r.readAsDataURL(file)}
+// ===== LOGIN =====
+let mode='guru';
+async function init(){try{REG=OWNER_URL?await api('list'):[]}catch(e){REG=[]}login()}
+function login(){$('#nav').style.display='none';
+const opt=REG.map(s=>`<option value="${s.id}">${E(s.nama)}</option>`).join('')||'<option value="">(belum ada sekolah aktif)</option>';
+$('#m').innerHTML=`<div class="card"><div class="mascot">☕<s>〰</s><s>〰</s></div><h2 style="text-align:center">RUANG SEDUH</h2><p class="q">${QUOTES[Math.random()*QUOTES.length|0]}</p>${OWNER_URL?'':'<p class="q" style="color:var(--cher)">⚠️ OWNER_URL belum diisi di file HTML</p>'}
+<div class="row">${[['guru','Guru'],['admin','Admin Sekolah'],['sekolah','Daftar Sekolah'],['owner','Owner']].map(x=>`<button class="${mode==x[0]?'':'g'}" onclick="mode='${x[0]}';login()">${x[1]}</button>`).join('')}</div><hr>
+${mode=='owner'?`<label>Kode masuk owner</label><input id="oc" type="password"><button onclick="loginOwner()">Masuk 🔑</button>`
+:mode=='sekolah'?`<h3>Daftarkan sekolahmu</h3><label>Nama sekolah</label><input id="sn"><label>Nama admin sekolah</label><input id="sa"><label>No. WA admin (628xxx)</label><input id="sw"><button onclick="daftarSekolah()">Kirim ke Owner 📨</button><p class="q" style="font-size:12px">Setelah owner meng-ACC, PIN admin dikirim ke WA-mu.</p>`
+:`<label>Sekolah</label><select id="sk">${opt}</select>
+${mode=='admin'?`<label>PIN Admin (contoh ADM-XXXXXX)</label><input id="ap"><button onclick="loginAdmin()">Masuk 🔑</button>`:`<label>NIP</label><input id="nip" inputmode="numeric"><label>PIN</label><input id="pn" type="password"><button onclick="loginGuru()">Masuk 🔑</button><button class="g" onclick="daftar()">Daftar akun guru baru</button><div id="dfm"></div>`}`}</div>`}
+async function daftarSekolah(){const nama=$('#sn').value.trim(),adm=$('#sa').value.trim(),w=$('#sw').value.trim();if(!nama||!adm||!w)return toast('Lengkapi data');
+if(!await T(api('daftarSekolah',{nama,adm,w})))return;window.open(wa(OWNER_WA,`Halo Owner, saya ${adm} mendaftarkan sekolah "${nama}" di Ruang Seduh (WA ${w}). Mohon di-ACC ☕`));toast('Terkirim! Tunggu ACC owner')}
+function profForm(g={}){const r=g.roles||[];return`<label>Peran kamu (boleh lebih dari satu; semua guru otomatis ikut piket)</label><div>${PERAN.map(p=>`<label style="margin-right:8px"><input type="checkbox" style="width:auto;margin:0" class="pr" value="${p}" ${r.includes(p)?'checked':''}> ${p}</label>`).join('')}</div>
+<div class="row"><div><label>Kelas wali (mis. 8A)</label><input id="pw" value="${E(g.kelasWali||'')}"></div><div><label>Kelas binaan mapel/BK (pisah koma, kosong = semua)</label><input id="pb" value="${E(g.kelas||'')}"></div><div><label>Hari piket</label><select id="pk"><option value="">-</option>${HARI.slice(1).map(h=>`<option ${g.piket==h?'selected':''}>${h}</option>`).join('')}</select></div></div>`}
+const readProf=()=>({roles:[...document.querySelectorAll('.pr:checked')].map(x=>x.value),kelasWali:$('#pw').value.trim(),kelas:$('#pb').value.trim(),piket:$('#pk').value});
+function daftar(){$('#dfm').innerHTML=`<hr><h3>Pendaftaran guru</h3><label>Nama lengkap</label><input id="dn"><label>NIP</label><input id="dp"><label>No. WA kamu (agar PIN bisa dikirim admin)</label><input id="dw">${profForm()}<button onclick="kirimDaftar()">Kirim ke WA Admin 📨</button>`}
+async function kirimDaftar(){const sid=$('#sk').value,sk=REG.find(x=>x.id==sid),nama=$('#dn').value.trim(),nip=$('#dp').value.trim();if(!sk||!nama||!nip)return toast('Lengkapi data');const pf=readProf();
+if(!await T(api('guruDaftar',{sid,d:{nip,nama,wa:$('#dw').value.trim(),...pf}})))return;
+window.open(wa(sk.wa,`Halo Admin ${sk.nama}, saya ${nama} (NIP ${nip}) mendaftar akun Ruang Seduh${pf.roles.length?' sebagai '+pf.roles.join(', '):''}. Mohon diaktifkan ☕`));toast('Terkirim! Tunggu admin mengaktifkan')}
+async function loginGuru(){const sid=$('#sk').value;if(!sid)return;const r=await T(api('guruLogin',{sid,nip:$('#nip').value.trim(),pin:$('#pn').value.trim()}));if(!r)return;
+S={role:'guru',sid,t:r.t,url:r.url,u:r.u,sk:r};await loadSchool(sid);start('home')}
+async function loginAdmin(){const sid=$('#sk').value;if(!sid)return;const r=await T(api('adminLogin',{sid,pin:$('#ap').value.trim()}));if(!r)return;S={role:'admin',sid,t:r.t,url:r.url,sk:r};await loadSchool(sid);start('pending')}
+async function refReg(){S.reg=await api('oList')}
+async function loginOwner(){const r=await T(api('ownerLogin',{oc:$('#oc').value}));if(!r)return;S={role:'owner',t:r.t};await T(refReg());S.reg=S.reg||[];start('sekolah')}
+// ===== NAV =====
+const has=(...r)=>S.role=='guru'&&S.u.roles.some(x=>r.includes(x));
+function tabs(){if(S.role=='owner')return[['sekolah','🏰','Sekolah'],['pending','🔮','Guru'],['panduan','📜','Panduan']];
+if(S.role=='admin')return[['pending','🔮','Guru'],['murid','🎒','Murid'],['setelan','⚙️','Setelan'],['panduan','📜','Panduan']];
+const t=[['home','🏠','Beranda'],['absen','📋','Absensi'],['kasus','⚖️','Kasus']];
+if(has('Guru Mapel','Guru BK'))t.push(['rpp','✨','RPP']);
+t.push(['dok','📸','Dokumen']);
+if(has('Kepala Sekolah'))t.splice(1,0,['pimpinan','🧭','Pimpinan']);
+if(has('Waka Kesiswaan','Kepala Sekolah'))t.push(['kesiswaan','🎖️','Kesiswaan']);
+if(has('Waka Kurikulum','Kepala Sekolah'))t.push(['kurikulum','📚','Kurikulum']);
+if(has('Sarpras','Kepala Sekolah'))t.push(['sarpras','🏗️','Sarpras']);
+if(has('Tata Usaha','Kepala Sekolah'))t.push(['tu','🗂️','Surat']);
+return t}
+function start(t){$('#out').style.display='';go(t)}
+function go(t){const n=$('#nav');n.style.display='flex';n.innerHTML=tabs().map(x=>`<button class="${x[0]==t?'on':''}" onclick="go('${x[0]}')"><b>${x[1]}</b>${x[2]}</button>`).join('');
+({sekolah:vSekolah,panduan:vPanduan,pending:vGuru,murid:vMurid,setelan:vSetelan,home:vHome,absen:vAbsen,kasus:vKasus,rpp:vRpp,dok:vDok,pimpinan:vPimp,kesiswaan:vKes,kurikulum:vKur,sarpras:vSar,tu:vTU})[t]();scrollTo(0,0)}
+const SK=()=>S.sk||{};
+const kelasList=()=>[...new Set(D.murid.map(m=>m.kelas))].sort();
+// ===== OWNER: kelola sekolah =====
+function pinBox(p,wn,txt){return p?`<p>PIN baru: <b>${E(p)}</b> <small>(tampil sekali, kirim sekarang)</small></p>${wn?`<a href="${wa(wn,txt)}" target="_blank"><button class="t">📲 Kirim PIN</button></a>`:''}`:''}
+function vSekolah(){const st={aktif:'✅',pending:'⏳',nonaktif:'⛔'};
+$('#m').innerHTML=`<div class="card"><h2>🏰 Dashboard Owner</h2><p>Jalan pintas: tambah sekolah langsung aktif tanpa registrasi (mis. sekolahmu sendiri):</p><input id="sn" placeholder="Nama sekolah"><button onclick="addSk()">Tambah ✨</button></div>`+
+S.reg.map((s,i)=>`<div class="card"><h3>${st[s.status]} ${E(s.nama)}</h3><p>Admin: ${E(s.adminNama||'-')} · WA ${E(s.wa||'-')}<br>Database: ${s.url?'terhubung ✅':'belum diisi'} · PIN: ${s.hasPin?'sudah dibuat':'belum'}</p>${pinBox(PINS['s'+s.id],s.wa,`Sekolah ${s.nama} sudah aktif di Ruang Seduh ☕ PIN admin: ${PINS['s'+s.id]}`)}
+<button onclick="stSk(${i},'aktif')">Aktifkan</button><button class="g" onclick="stSk(${i},'nonaktif')">Nonaktifkan</button><button class="g" onclick="rsSk(${i})">Reset PIN admin</button><button class="g" onclick="masukAdm(${i})">Masuk sebagai admin</button></div>`).join('')||'<p>Belum ada sekolah mendaftar.</p>'}
+async function addSk(){const n=$('#sn').value.trim();if(!n)return;const r=await T(api('oAdd',{nama:n}));if(!r)return;PINS['s'+r.id]=r.pin;await refReg();vSekolah()}
+async function stSk(i,s){const id=S.reg[i].id,r=await T(api('oSt',{id,st:s}));if(!r)return;if(r.pin)PINS['s'+id]=r.pin;await refReg();vSekolah()}
+async function rsSk(i){const id=S.reg[i].id,r=await T(api('oReset',{id}));if(!r)return;PINS['s'+id]=r.pin;vSekolah()}
+async function masukAdm(i){const s=S.reg[i];S.role='admin';S.sid=s.id;S.owner=true;S.url=s.url;S.sk=s;await loadSchool(s.id);go('pending')}
+// ===== ADMIN / OWNER: akun guru (disimpan terpusat, PIN ter-hash) =====
+async function vGuru(){const own=S.role=='owner',st={aktif:'✅',pending:'⏳',nonaktif:'⛔'};
+const h=own?`<div class="card"><h2>🔮 Semua Guru</h2><select onchange="pilihSk(this.value)"><option value="">Pilih sekolah…</option>${S.reg.map(s=>`<option value="${s.id}" ${S.sid==s.id?'selected':''}>${E(s.nama)}</option>`).join('')}</select></div>`:`<h2 style="color:var(--car)">🔮 Akun Guru</h2>`;
+if(own&&!S.sid){$('#m').innerHTML=h;return}
+S.gl=await T(api('gList',{sid:S.sid}))||[];
+$('#m').innerHTML=h+(S.gl.map((g,i)=>`<div class="card"><h3>${st[g.status]} ${E(g.nama)} <small>(NIP ${E(g.nip)})</small></h3><p>${g.status}<br>${g.roles.map(r=>`<span class="chip">${r}</span>`).join('')||'<small>Peran belum dipilih guru</small>'}${g.kelasWali?`<span class="chip">Wali ${E(g.kelasWali)}</span>`:''}${g.piket?`<span class="chip">Piket ${g.piket}</span>`:''}</p>
+${PINS[g.nip]?pinBox(PINS[g.nip],g.wa,`Akun Ruang Seduh kamu siap ☕ NIP: ${g.nip}, PIN: ${PINS[g.nip]}`):`<p><small>${g.hasPin?'PIN tersimpan terenkripsi. Lupa? Reset PIN.':'Belum ada PIN. Klik Aktifkan.'}</small></p>`}
+<button onclick="stG(${i},'aktif')">Aktifkan</button><button class="g" onclick="stG(${i},'nonaktif')">Nonaktifkan</button><button class="g" onclick="rsG(${i})">Reset PIN</button></div>`).join('')||'<div class="card">Belum ada guru mendaftar.</div>')}
+function pilihSk(id){S.sid=id;vGuru()}
+async function stG(i,s){const g=S.gl[i],r=await T(api('gSet',{sid:S.sid,nip:g.nip,st:s}));if(!r)return;if(r.pin)PINS[g.nip]=r.pin;vGuru()}
+async function rsG(i){const g=S.gl[i],r=await T(api('gReset',{sid:S.sid,nip:g.nip}));if(!r)return;PINS[g.nip]=r.pin;vGuru()}
+function vMurid(){const k=kelasList();$('#m').innerHTML=`<div class="card"><h2>🎒 Data Murid</h2><p>${D.murid.length} murid di ${k.length} kelas (${k.join(', ')||'-'})</p>${S.url?`<button onclick="tarik()">🔄 Tarik dari Google Sheets (tab Murid)</button>`:''}<hr><label>Atau tempel dari Excel/Sheets — kolom: Nama, Kelas, Tgl Lahir, JK, Agama</label><textarea id="imp" rows="6"></textarea><button onclick="impor()">Impor</button></div>`}
+async function tarik(){const r=await fetch(S.url+'?k=murid');D.murid=await r.json();save('murid');vMurid()}
+function impor(){D.murid=$('#imp').value.split('\n').map(l=>l.split(/\t|;|,/).map(x=>x.trim())).filter(r=>r[0]&&r[0].toLowerCase()!='nama').map(r=>({nama:r[0],kelas:r[1]||'',tgl:r[2]||'',jk:r[3]||'',agama:r[4]||''}));save('murid');vMurid()}
+function vSetelan(){const s=SK();$('#m').innerHTML=`<div class="card"><h2>⚙️ Setelan Sekolah</h2><label>No. WA admin (wajib, 628xxx)</label><input id="sw" value="${E(s.wa)}"><label>URL Web App Apps Script database sekolah</label><input id="su" value="${E(s.url)}"><div class="row"><div><label>Nama kepala sekolah</label><input id="kn" value="${E(s.ksNama)}"></div><div><label>NIP kepala sekolah</label><input id="kp" value="${E(s.ksNip)}"></div></div><button onclick="setSk()">Simpan</button><button class="t" onclick="tesUrl()">🔌 Tes koneksi</button>${S.owner?`<hr><button class="g" onclick="jadiBK()">Tambahkan saya sebagai Guru BK (aktif)</button>`:''}</div>`+kopForm()}
+async function setSk(){const d={sid:S.sid,wa:$('#sw').value.trim(),url:$('#su').value.trim(),ksNama:$('#kn').value.trim(),ksNip:$('#kp').value.trim()};if(!await T(api('sSet',d)))return;const first=d.url&&d.url!=S.url;Object.assign(S.sk,d);S.url=d.url;
+if(first){for(const k of['murid','absen','kasus','dok','info','sarpras','osis','agenda','tamu','rekap','kop'])if(D[k]!==undefined)save(k);toast('Tersimpan & data dikirim ke Sheet sekolah ✅');return}toast('Tersimpan')}
+async function tesUrl(){const u=$('#su').value.trim();if(!u)return toast('Isi URL dulu');try{const r=await fetch(u+'?k=ping');await r.json();toast('✅ Terhubung ke database sekolah')}catch(e){toast('❌ Belum terhubung. Cek deploy (akses Anyone) dan URL berakhiran /exec')}}
+async function jadiBK(){const r=await T(api('gAdd',{sid:S.sid,d:{nip:'OWNER',nama:'Owner',wa:OWNER_WA,roles:['Guru BK']}}));if(!r)return;PINS['OWNER']=r.pin;toast('Ditambahkan. PIN ada di tab Guru')}
+function vPanduan(){const o=S.role=='owner';$('#m').innerHTML=`<div class="card"><h2>📜 Panduan Langkah demi Langkah</h2><ol style="line-height:1.7">${o?`<li>Buat Google Sheet kosong (registry + akun + AI). Extensions → Apps Script → tempel kode di bawah → Deploy → New deployment → Web app (Execute as: Me, akses: Anyone).</li><li>Project Settings → Script Properties → tambah <b>OWNER_CODE</b> (kode masukmu) dan <b>GEMINI_KEY</b> (API key AI; opsional <b>GEMINI_MODEL</b>). Keduanya tidak ada di HTML.</li><li>Tempel URL web app ke konstanta <b>OWNER_URL</b>, isi <b>TEMPLATE_URL</b>, lalu unggah HTML ke hosting.</li><li>Sekolah mendaftar lewat "Daftar Sekolah" → WA masuk ke kamu → tab Sekolah → Aktifkan → PIN muncul sekali, klik Kirim PIN. Reset PIN admin dan kelola semua guru dari tab Sekolah dan Guru.</li>`:`<li>${TEMPLATE_URL?'Klik <b>Salin Template</b> di bawah (jadi Sheet milik sekolahmu, kode sudah terpasang). Di Sheet salinan: Extensions → Apps Script → Deploy → New deployment → Web app (Execute as: Me, Anyone) → Authorize → salin URL.':'Buat Google Sheet baru. Extensions → Apps Script → tempel kode di bawah → Deploy → Web app (Anyone) → salin URL.'}</li><li>Tab Setelan → isi WA admin dan tempel URL tadi.</li><li>(Opsional) di Sheet buat tab <b>Murid</b> dengan header: Nama, Kelas, Tgl_Lahir, JK, Agama → tab Murid di web → Tarik. Atau impor lewat tempel.</li><li>Guru mendaftar dan memilih perannya sendiri → WA masuk ke kamu → tab Guru → Aktifkan → PIN muncul sekali, klik Kirim PIN. Lupa PIN guru: Reset PIN. Lupa PIN admin: hubungi owner.</li>`}</ol>
+${!o&&TEMPLATE_URL?`<a href="${TEMPLATE_URL}" target="_blank"><button class="t">📄 Salin Template</button></a>`:''}<label>Kode Apps Script</label><pre>${E($('#gs').textContent)}</pre><button onclick="navigator.clipboard.writeText($('#gs').textContent).then(()=>toast('Disalin'))">Salin kode</button></div>`}
+// ===== BERANDA =====
+function relKasus(){const u=S.u,all=D.kasus;if(has('Waka Kesiswaan','Kepala Sekolah')||u.piket==HARI[new Date().getDay()])return all;let a=[];
+if(has('Wali Kelas'))a=a.concat(all.filter(k=>k.kelas==u.kelasWali));if(has('Guru BK'))a=a.concat(all.filter(k=>!u.kelas||u.kelas.split(',').map(x=>x.trim()).includes(k.kelas)));return[...new Set(a)]}
+function vHome(){const u=S.u,canPost=has('Kepala Sekolah','Waka Kurikulum','Waka Kesiswaan','Sarpras'),ks=relKasus().slice(-5).reverse();
+$('#m').innerHTML=`<div class="card"><div class="mascot">☕<s>〰</s><s>〰</s></div><h2 style="text-align:center">${E(u.nama)}</h2><p style="text-align:center">NIP ${E(u.nip)}<br>${u.roles.map(r=>`<span class="chip">${r}</span>`).join('')||'<span class="chip">Pilih peranmu dulu ↓</span>'}${u.piket?`<span class="chip">Piket ${u.piket}</span>`:''}<br><b>${E(SK().nama)}</b></p><button class="g" onclick="editProf()">✏️ Ubah peran / kelas / piket</button><div id="pf"></div></div>
+<div class="card"><h3>🔔 Pemberitahuan kasus terbaru</h3>${ks.map(k=>`<p>⚠️ <b>${E(k.nama)}</b> (${E(k.kelas)}) — ${E(k.jenis)} · ${k.tgl}</p>`).join('')||'<p>Tenang, tidak ada.</p>'}</div>
+${canPost?`<div class="card"><h3>📣 Pengumuman / unggah berkas</h3><input id="ij" placeholder="Judul"><textarea id="ii" rows="3" placeholder="Isi"></textarea><select id="ik"><option>Pengumuman</option><option>Jadwal Pelajaran</option><option>Berkas</option></select><input id="if" type="file"><button onclick="postInfo()">Terbitkan</button></div>`:''}
+<h3 style="color:var(--car)">📜 Papan Pengumuman</h3>${D.info.slice().reverse().map(x=>`<div class="card"><b>${E(x.judul)}</b> <span class="chip">${E(x.kat)}</span><p>${E(x.isi)}</p><small>${x.tgl} · ${E(x.oleh)}</small>${x.data?`<br><a href="${x.data}" download="${E(x.fn)}">📎 ${E(x.fn)}</a>`:''}</div>`).join('')||'<p>Belum ada pengumuman.</p>'}`}
+function editProf(){$('#pf').innerHTML=profForm(S.u)+`<button onclick="saveProf()">Simpan</button>`}
+async function saveProf(){const d=readProf(),r=await T(api('guruProfil',{d}));if(!r)return;if(r.pending){toast('Peran Kepala Sekolah/Waka/BK baru perlu disetujui admin. Akunmu dinonaktifkan sementara.');setTimeout(()=>location.reload(),2800);return}Object.assign(S.u,d);vHome()}
+function postInfo(b='home'){const f=$('#if').files[0],x={id:Date.now(),tgl:today(),judul:$('#ij').value,isi:$('#ii').value,kat:$('#ik').value,oleh:S.u.nama};if(!x.judul)return toast('Isi judul');
+const done=()=>{D.info.push(x);save('info');go(b)};if(!f)return done();if(f.size>250000)return toast('Berkas maks ±250 KB');const r=new FileReader();r.onload=()=>{x.data=r.result;x.fn=f.name;done()};r.readAsDataURL(f)}
+// ===== ABSENSI =====
+function bars(a){const mx=Math.max(1,...a.map(x=>x[1]));return`<div class="bar">${a.map(x=>`<div>${x[1]}<i style="height:${x[1]/mx*100}px"></i>${x[0]}</div>`).join('')}</div>`}
+const wk=d=>{const t=new Date(d);t.setDate(t.getDate()-((t.getDay()+6)%7));return t.toISOString().slice(0,10)};
+function myKelas(){const u=S.u,a=new Set();if(u.kelasWali)a.add(u.kelasWali);if(u.kelas)u.kelas.split(',').forEach(x=>a.add(x.trim()));return a.size?[...a]:kelasList()}
+let aSub='rekap';const canIn=()=>has('Wali Kelas','Guru Mapel','Guru BK'),canRk=()=>has('Wali Kelas','Guru BK');
+function vAbsen(){const ks=canIn()?myKelas():kelasList(),sub=canIn()?aSub:'rekap';
+$('#m').innerHTML=`<div class="row"><button class="${sub=='rekap'?'':'g'}" onclick="aSub='rekap';vAbsen()">📅 Rekap Bulanan</button><button class="${sub=='input'?'':'g'}" onclick="aSub='input';vAbsen()" ${canIn()?'':'disabled'}>📝 Per Pertemuan</button></div>`+(sub=='input'?
+`<div class="card"><h3>Absensi per pertemuan</h3><div class="row"><div><label>Kelas</label><select id="ak" onchange="listAb()">${ks.map(k=>`<option>${k}</option>`).join('')}</select></div><div><label>Tanggal</label><input type="date" id="at" value="${today()}"></div><div><label>Mapel/Layanan & pertemuan ke-</label><input id="ar" placeholder="mis. IPA – P3"></div></div><div id="al"></div><button onclick="saveAb()">Simpan absensi ✅</button></div><div class="card"><h3>Riwayat pertemuan</h3><div id="rw" class="paper"></div>${dlb('rw','riwayat-pertemuan')}</div>`:
+`<div class="card"><div class="row"><div><label>Bulan</label><input type="month" id="rb" value="${today().slice(0,7)}" onchange="rkLoad()"></div><div><label>Kelas</label><select id="rk" onchange="rkLoad()">${ks.map(k=>`<option>${k}</option>`).join('')}</select></div><div><label>Libur manual (tanggal, pisah koma)</label><input id="rl" onchange="rkGrid(true)"></div></div>
+<p style="font-size:12px">${canRk()?'Klik kotak untuk ganti H → S → I → A. Wali kelas dan BK saling terhubung.':'Mode lihat saja.'}</p><div id="rekapBox" class="paper">${kop()}<h3 id="rj" style="text-align:center"></h3><div class="sc" id="rg"></div><h3>Grafik ketidakhadiran per minggu</h3><div id="rc"></div></div>${canRk()?`<button onclick="rkSave()">💾 Simpan rekap</button>`:''}${dlb('rekapBox','rekap-absensi')}</div>`);
+sub=='input'?(listAb(),riwayat()):rkLoad()}
+function listAb(){const k=$('#ak').value;$('#al').innerHTML=`<div class="sc"><table>${D.murid.filter(m=>m.kelas==k).map((m,i)=>`<tr><td>${i+1}</td><td class="n">${E(m.nama)}</td><td><select class="as" data-n="${E(m.nama)}" style="margin:0"><option>H</option><option>S</option><option>I</option><option>A</option></select></td></tr>`).join('')||'<tr><td>Belum ada murid di kelas ini</td></tr>'}</table></div>`}
+function saveAb(){const d={};document.querySelectorAll('.as').forEach(s=>d[s.dataset.n]=s.value);if(!Object.keys(d).length)return;D.absen.push({id:Date.now(),kelas:$('#ak').value,tgl:$('#at').value,ket:$('#ar').value,oleh:S.u.nama,data:d});save('absen');toast('Absensi tersimpan');riwayat()}
+function riwayat(){$('#rw').innerHTML=`<table><tr><th>Tgl</th><th>Kelas</th><th>Mapel/Layanan</th><th>Oleh</th><th>H</th><th>S</th><th>I</th><th>A</th></tr>${D.absen.slice(-40).reverse().map(e=>{const v=Object.values(e.data),c=x=>v.filter(y=>y==x).length;return`<tr><td>${e.tgl}</td><td>${E(e.kelas)}</td><td>${E(e.ket)}</td><td>${E(e.oleh)}</td><td>${c('H')}</td><td>${c('S')}</td><td>${c('I')}</td><td>${c('A')}</td></tr>`}).join('')}</table>`}
+const key=()=>$('#rk').value+'|'+$('#rb').value;
+function rkLoad(){const sv=D.rekap[key()];$('#rl').value=sv?sv.libur:'';rkGrid(false)}
+function gather(){const d={};document.querySelectorAll('#rg td[data-m]').forEach(c=>{(d[c.dataset.n]=d[c.dataset.n]||{})[c.dataset.t]=c.dataset.v});return d}
+function rkGrid(dom){const b=$('#rb').value,k=$('#rk').value;if(!b||!k)return;const [y,m]=b.split('-').map(Number),n=new Date(y,m,0).getDate(),d=dom?gather():(D.rekap[key()]||{d:{}}).d,lib=$('#rl').value.split(',').map(x=>+x.trim()).filter(x=>x),ms=D.murid.filter(x=>x.kelas==k);
+$('#rj').innerHTML=`REKAP ABSENSI KELAS ${E(k)} — ${new Date(y,m-1,1).toLocaleString('id-ID',{month:'long',year:'numeric'}).toUpperCase()}<br><small>${E(SK().nama)}</small>`;
+let h=`<table><tr><th>Nama Murid</th>`;for(let i=1;i<=n;i++)h+=`<th style="${new Date(y,m-1,i).getDay()==0||lib.includes(i)?'background:#ff9aa5':''}">${i}</th>`;h+=`<th>S</th><th>I</th><th>A</th></tr>`;
+ms.forEach((s,ix)=>{h+=`<tr><td class="n">${ix+1}. ${E(s.nama)}</td>`;for(let i=1;i<=n;i++){const off=new Date(y,m-1,i).getDay()==0||lib.includes(i),mv=d[s.nama]&&d[s.nama][i],v=mv||(off?'-':'H');h+=`<td class="c c-${v=='-'?'lib':v}" data-n="${E(s.nama)}" data-t="${i}" data-v="${v}" ${mv?'data-m="1"':''} onclick="tg(this)">${v}</td>`}h+=`<td class="tt"></td><td class="tt"></td><td class="tt"></td></tr>`});
+$('#rg').innerHTML=h+(ms.length?'':'<tr><td>Belum ada murid di kelas ini</td></tr>')+'</table>';document.querySelectorAll('#rg tr').forEach(tot);chart()}
+function tg(c){if(!canRk())return;const cy=['H','S','I','A'],v=cy[(cy.indexOf(c.dataset.v)+1)%4];c.dataset.v=v;c.textContent=v;c.className='c c-'+v;c.dataset.m=1;tot(c.parentNode);chart()}
+function tot(tr){const t=tr.querySelectorAll('.tt');if(!t.length)return;const v=[...tr.querySelectorAll('.c')].map(c=>c.dataset.v);['S','I','A'].forEach((x,i)=>t[i].textContent=v.filter(y=>y==x).length)}
+function chart(){const w={};document.querySelectorAll('#rg .c').forEach(c=>{if('SIA'.includes(c.dataset.v)&&c.dataset.v!='-'){const k='Mgg '+(Math.floor((c.dataset.t-1)/7)+1);w[k]=(w[k]||0)+1}});$('#rc').innerHTML=bars(['Mgg 1','Mgg 2','Mgg 3','Mgg 4','Mgg 5'].map(k=>[k,w[k]||0]))}
+function rkSave(){D.rekap[key()]={libur:$('#rl').value,d:gather()};save('rekap');toast('Rekap tersimpan ☕')}
+// ===== KASUS =====
+const canK=()=>has('Waka Kesiswaan','Wali Kelas')||S.u.piket==HARI[new Date().getDay()];let kMode='w';
+function vKasus(){const ks=relKasus(),w=canK(),opt=a=>a.map(x=>`<option>${x}</option>`).join('')+'<option value="_x">Lainnya (ketik manual)…</option>',g={};ks.forEach(k=>{const q=kMode=='w'?wk(k.tgl).slice(5):k.tgl.slice(0,7);g[q]=(g[q]||0)+1});
+$('#m').innerHTML=`<div class="card"><small>${w?'Kamu punya hak catat kasus hari ini.':'Mode lihat saja (hak tulis: Waka Kesiswaan, Wali Kelas, Guru Piket di hari piketnya).'}</small></div>
+${w?`<div class="card"><h3>⚖️ Catat kasus / pelanggaran</h3><div class="row"><div><label>Kelas</label><select id="kk" onchange="fm()">${kelasList().map(k=>`<option>${k}</option>`).join('')}</select></div><div><label>Murid</label><select id="kn"></select></div></div>
+<div class="row"><div><label>Pelapor</label><select id="kp"><option>Guru Piket</option><option>Waka Kesiswaan</option><option>Wali Kelas</option></select></div><div><label>Jenis pelanggaran</label><select id="kj" onchange="lain(this)">${opt(JENIS)}</select><input id="kjx" style="display:none" placeholder="Ketik jenis"></div><div><label>Tindakan</label><select id="kt" onchange="lain(this)">${opt(TIND)}</select><input id="ktx" style="display:none" placeholder="Ketik tindakan"></div></div>
+<label>Kronologi singkat</label><textarea id="kc" rows="2"></textarea><label>Solusi manual</label><textarea id="ks" rows="2"></textarea><button class="t" onclick="aiK()">🤖 Minta solusi AI</button><div id="kai" class="paper" style="display:none;margin:6px 0"></div>
+<label>Foto bukti (kamera atau galeri)</label><input type="file" accept="image/*" id="kf"><button onclick="saveK()">Simpan & beritahu wali kelas/BK/kesiswaan 🔔</button></div>`:''}
+<div class="card"><h3>📊 Grafik kasus</h3><select onchange="kMode=this.value;vKasus()"><option value="w" ${kMode=='w'?'selected':''}>Mingguan</option><option value="b" ${kMode=='b'?'selected':''}>Bulanan</option></select>${bars(Object.entries(g).slice(-8))}</div>
+<h3 style="color:var(--car)">Riwayat</h3>${ks.slice().reverse().map(k=>`<div class="card"><div id="kc${k.id}" class="paper"><b>${E(k.nama)}</b> (${E(k.kelas)}) <span class="chip">${E(k.jenis)}</span><span class="chip">${E(k.tindakan)}</span><span class="chip">${k.status||'Baru'}</span><p>${E(k.catatan)}</p>${k.tl?`<p>📌 ${E(k.tl)}</p>`:''}${k.solusi?`<p>💡 ${E(k.solusi)}</p>`:''}${k.ai?`<p>🤖 ${E(k.ai)}</p>`:''}${k.foto?`<img class="ft" src="${k.foto}">`:''}<small>${k.tgl} · ${E(k.pelapor)}: ${E(k.oleh)}</small></div>${dlb('kc'+k.id,'kasus-'+k.id)}${k.surat?`<button class="g" onclick="openSurat(${k.id})">📨 Lihat surat (${E(k.surat.jenis)})</button>`:''}</div>`).join('')||'<p>Belum ada catatan.</p>'}`;if(w)fm()}
+const lain=s=>{document.getElementById(s.id+'x').style.display=s.value=='_x'?'block':'none'};
+const fm=()=>{$('#kn').innerHTML=D.murid.filter(m=>m.kelas==$('#kk').value).map(m=>`<option>${E(m.nama)}</option>`).join('')};
+async function aiK(){const j=$('#kj').value=='_x'?$('#kjx').value:$('#kj').value,b=$('#kai');b.style.display='block';b.textContent='Menyeduh solusi… ☕';
+try{S.ai=await panggilAI(`Kamu konselor sekolah SMP di Indonesia. Murid kelas ${$('#kk').value} melakukan pelanggaran: ${j}. Kronologi: ${$('#kc').value}. Beri solusi pembinaan bertahap yang mendidik dan humanis (langkah guru, langkah BK, peran orang tua, tindak lanjut), ringkas, tanpa kekerasan.`);b.textContent=S.ai}catch(e){b.textContent='Gagal: '+e.message}}
+function saveK(){const v=s=>$('#'+s).value=='_x'?$('#'+s+'x').value:$('#'+s).value,x={id:Date.now(),tgl:today(),kelas:$('#kk').value,nama:$('#kn').value,pelapor:$('#kp').value,oleh:S.u.nama,jenis:v('kj'),tindakan:v('kt'),catatan:$('#kc').value,solusi:$('#ks').value,ai:S.ai||''};S.ai='';if(!x.nama)return toast('Pilih murid');
+const f=$('#kf').files[0],done=()=>{D.kasus.push(x);save('kasus');toast('Kasus tercatat');vKasus()};f?foto(f,d=>{x.foto=d;done()}):done()}
+// ===== GENERATOR (BK: RPL/Materi/LKPD terpisah · Mapel: 1 Modul Ajar lengkap) =====
+try{mermaid.initialize({startOnLoad:false,theme:'neutral'})}catch(e){}
+const gv=id=>$('#'+id).value;
+const idf=()=>`<div class="row"><div><label>Nama guru</label><input id="rg2" value="${E(S.u.nama)}"></div><div><label>NIP</label><input id="rn" value="${E(S.u.nip)}"></div></div><div class="row"><div><label>Nama kepala sekolah</label><input id="rks" value="${E(SK().ksNama)}"></div><div><label>NIP kepala sekolah</label><input id="rkn" value="${E(SK().ksNip)}"></div></div><div class="row"><div><label>Kelas</label><input id="rkl" placeholder="mis. Kelas 9"></div><div><label>Tanggal</label><input id="rt" type="date" value="${today()}"></div></div>`;
+const sig=()=>ttBlock([{jab:'Kepala '+(SK().nama||''),nama:gv('rks'),nip:gv('rkn'),m:1,img:''},{jab:'Guru',nama:gv('rg2'),nip:gv('rn'),m:0,img:''}]);
+const tglID=()=>new Date(gv('rt')).toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+const ident=()=>`Sekolah: ${SK().nama}. Kelas: ${gv('rkl')}. Guru: ${gv('rg2')} (NIP ${gv('rn')}). Kepala sekolah: ${gv('rks')} (NIP ${gv('rkn')}). Tanggal: ${tglID()}.`;
+const bersih=t=>t.replace(/```html|```/gi,'').replace(/<script[\s\S]*?<\/script>/gi,'');
+async function mm(id){try{await mermaid.run({nodes:document.querySelectorAll('#'+id+' .mermaid')})}catch(e){console.error(e)}}
+let gm='';
+function vRpp(){const b=has('Guru BK'),m=has('Guru Mapel');if(!gm||(gm=='bk'&&!b)||(gm=='mapel'&&!m))gm=b?'bk':'mapel';
+const sw=(b&&m)?`<div class="row"><button class="${gm=='bk'?'':'g'}" onclick="gm='bk';vRpp()">🧠 Generator BK</button><button class="${gm=='mapel'?'':'g'}" onclick="gm='mapel';vRpp()">📚 Modul Mapel</button></div>`:'';
+gm=='bk'?vBk(sw):vMapel(sw)}
+// --- BK ---
+function vBk(sw){$('#m').innerHTML=sw+`<div class="card"><h2>🤖 Generator RPL, Materi & LKPD</h2><p>Ketik 1 kondisi kelas. Pilih dokumen yang ingin dibuat satu per satu agar proses AI lebih cepat dan mendetail.</p>${idf()}
+<input id="tp" placeholder="Ceritakan kondisi kelas di sini (Contoh: Prokrastinasi)..." oninput="saran(this.value)"><div id="sr"></div>
+<div class="row"><button id="b-rpl" onclick="buatDok('rpl')">📄 1. BUAT RPL</button><button class="t" id="b-materi" onclick="buatDok('materi')">📚 2. BUAT MATERI</button><button class="g" id="b-lkpd" onclick="buatDok('lkpd')">📝 3. BUAT LKPD + REFLEKSI</button></div></div>`+
+['rpl','materi','lkpd'].map(j=>`<div class="card" id="a-${j}" style="display:none"><div id="c-${j}" class="paper"></div>${dlb('c-'+j,j.toUpperCase())}</div>`).join('');saran('')}
+const SR={ak:['Akademik',['Manajemen Stres Hadapi Ulangan','Teknik Belajar Cepat & Mengingat']],so:['Sosial',['Manajemen Konflik Teman Sebaya','Membangun Empati & Stop Bullying']],em:['Emosional',['Regulasi Emosi Remaja Masa Puber','Seni Menenangkan Diri (Mindfulness)']],um:['Umum',['Seni Mengelola Tekanan Teman Sebaya (Peer Pressure)','Bahaya Circle Pertemanan Toxic']]};
+function saran(t){t=t.toLowerCase();const k=/ulangan|ujian|semester|nilai/.test(t)?'ak':/berantem|konflik|bullying|ejek|toxic/.test(t)?'so':/emosi|stres|nangis|marah/.test(t)?'em':'um';
+$('#sr').innerHTML=`<b>Saran ${SR[k][0]}: </b>`+SR[k][1].map(x=>`<span class="chip" style="cursor:pointer" onclick="$('#tp').value=this.dataset.v" data-v="${E(x)}">${E(x.split('(')[0].slice(0,26))}</span>`).join('')}
+async function buatDok(j){const tp=gv('tp').trim();if(!tp)return toast('⚠️ Ketik kondisi kelas atau topik dulu');const btn=$('#b-'+j),old=btn.innerHTML,c=$('#c-'+j);$('#a-'+j).style.display='block';btn.disabled=true;btn.textContent='⏳ Menyeduh…';c.innerHTML=`Sedang merancang ${j.toUpperCase()} untuk "${E(tp)}"… ☕ (±10-30 detik)`;
+const dasar=`Saya Guru BK SMP. ${ident()} Isu/kondisi kelas: "${tp}". Keluarkan HANYA HTML murni (tanpa markdown/backtick), gunakan h2/h3, p, ul, ol, table border=1. `;
+const P={rpl:dasar+`Buatkan Rencana Pelaksanaan Layanan (RPL) Bimbingan Klasikal 45 menit sesuai Kurikulum Merdeka dan prinsip Pembelajaran Mendalam (berkesadaran, bermakna, menggembirakan). Struktur: Judul layanan (h2), Identitas, Analisis kondisi singkat, Tujuan layanan, Dimensi profil lulusan, Metode A.R.K.A (Aktivitas pemantik, Refleksi, Konseptualisasi, Aplikasi) dengan alokasi waktu tiap tahap, Asesmen, Tindak lanjut. Jangan buat tanda tangan.`,
+materi:dasar+`Buatkan HANYA Materi Pendukung yang SANGAT DETAIL, rinci, dan mendalam, mudah dipahami remaja. Struktur: Judul materi (h2), penjelasan komprehensif, contoh kasus, tips praktis. PENTING: sisipkan 1 mind map alur dengan sintaks Mermaid di dalam <div class="mermaid">graph TD; A-->B;</div> (kode mermaid harus valid, label tanpa tanda kurung/kutip).`,
+lkpd:dasar+`Buatkan HANYA Lembar Kerja Peserta Didik (LKPD) dan Lembar Refleksi. Struktur: Judul LKPD (h2), identitas siswa (nama, kelas, tanggal), instruksi misi dengan langkah metode A.R.K.A (Aktivitas pemantik, Refleksi, Konseptualisasi, Aplikasi), dan 3 pertanyaan refleksi kritis dengan garis kosong untuk menulis jawaban.`}[j];
+try{let h=bersih(await panggilAI(P));c.innerHTML=(j=='rpl'?kop():'')+h+(j=='rpl'?sig():'');if(j=='materi')setTimeout(()=>mm('c-materi'),400);toast('✨ '+j.toUpperCase()+' selesai')}catch(e){c.textContent='❌ Gagal: '+e.message}finally{btn.innerHTML=old;btn.disabled=false}}
+// --- Mapel: 1 modul ajar lengkap ---
+function vMapel(sw){$('#m').innerHTML=sw+`<div class="card"><h2>📚 Generator Modul Ajar</h2><p>Satu modul lengkap: RPP, materi, LKPD, asesmen, dan refleksi.</p>${idf()}<div class="row"><div><label>Mata pelajaran</label><input id="rm"></div><div><label>Alokasi waktu</label><input id="ral" value="2 x 40 menit"></div></div><label>Materi/topik</label><input id="rmt"><button id="b-rppm" onclick="genRppM()">📄 1. BUAT RPP</button><button class="t" onclick="genModul()">📚 2. BUAT MODUL AJAR LENGKAP</button></div><div class="card" id="a-rppm" style="display:none"><div id="rppmBox" class="paper"></div>${dlb('rppmBox','RPP')}</div><div class="card" id="a-mod" style="display:none"><div id="modulBox" class="paper"></div>${dlb('modulBox','Modul-Ajar')}</div>`}
+async function genModul(){if(!gv('rm')||!gv('rmt'))return toast('Isi mapel dan materi');const c=$('#modulBox');$('#a-mod').style.display='block';c.innerHTML='Sedang menyeduh modul ajar lengkap… ☕ (bisa 30-60 detik)';
+const p=`Saya guru ${gv('rm')} SMP. ${ident()} Materi: "${gv('rmt')}". Alokasi waktu: ${gv('ral')}. Buatkan MODUL AJAR yang SANGAT LENGKAP dan siap pakai, sesuai Kurikulum Merdeka dan pendekatan Pembelajaran Mendalam (berkesadaran, bermakna, menggembirakan; pengalaman belajar memahami, mengaplikasi, merefleksi). Keluarkan HANYA HTML murni (tanpa markdown/backtick), gunakan h2/h3, p, ul, ol, table border=1.
+Urutan wajib: A. Identitas modul. B. Capaian Pembelajaran, Tujuan Pembelajaran, Dimensi Profil Lulusan, Pemahaman Bermakna, Pertanyaan Pemantik. C. Sarana prasarana, target peserta didik, model & metode. D. RPP: kegiatan pendahuluan, inti (memahami, mengaplikasi, merefleksi) dan penutup dengan alokasi waktu rinci. E. Materi ajar lengkap dan mendalam disertai contoh, plus 1 mind map Mermaid di <div class="mermaid">graph TD; A-->B;</div> (valid, label tanpa tanda kurung/kutip). F. LKPD lengkap dengan petunjuk dan soal beserta ruang jawaban. G. Asesmen (diagnostik, formatif, sumatif) dengan instrumen soal dan rubrik penilaian. H. Pengayaan dan remedial. I. Refleksi guru dan refleksi peserta didik. J. Daftar pustaka. Jangan buat tanda tangan.`;
+try{c.innerHTML=kop()+bersih(await panggilAI(p))+sig();setTimeout(()=>mm('modulBox'),400);toast('✨ Modul ajar selesai')}catch(e){c.textContent='❌ Gagal: '+e.message}}
+
+// ===== MENU PIMPINAN & WAKIL =====
+const o=(a,s)=>a.map(x=>`<option ${x==s?'selected':''}>${x}</option>`).join('');
+const infoCard=x=>`<div class="card"><b>${E(x.judul)}</b> <span class="chip">${E(x.kat)}</span><p>${E(x.isi)}</p><small>${x.tgl} · ${E(x.oleh)}</small>${x.data?`<br><a href="${x.data}" download="${E(x.fn)}">📎 ${E(x.fn)}</a>`:''}</div>`;
+// --- Kurikulum ---
+function vKur(){const w=has('Waka Kurikulum'),K=['Jadwal Pelajaran','Kalender Akademik','Perangkat Ajar'];
+$('#m').innerHTML=`<div class="card"><h2>📚 Kurikulum</h2>${w?`<label>Jenis berkas</label><select id="ik">${o(K)}</select><input id="ij" placeholder="Judul, mis. Jadwal Pelajaran Semester Genap"><textarea id="ii" rows="2" placeholder="Keterangan"></textarea><input id="if" type="file"><button onclick="postInfo('kurikulum')">Unggah untuk semua guru</button><p style="font-size:12px">Berkas langsung muncul di Beranda semua guru. Maks ±250 KB per berkas.</p>`:'<small>Mode lihat saja.</small>'}</div>`+D.info.filter(x=>K.includes(x.kat)).reverse().map(infoCard).join('')}
+// --- Kesiswaan (kasus tindak lanjut + OSIS) ---
+const OS=['Rencana','Berjalan','Selesai'],ST=['Baru','Diproses','Selesai'];
+function vKes(){const w=has('Waka Kesiswaan'),ks=D.kasus,jn={};ks.forEach(k=>jn[k.jenis]=(jn[k.jenis]||0)+1);
+const tl=ks.filter(k=>/SP|Panggilan|Mediasi/.test(k.tindakan)).length;
+$('#m').innerHTML=`<div class="card"><h2>🎖️ Kesiswaan</h2><p>Total kasus <b>${ks.length}</b> · Panggilan ortu/mediasi/SP <b>${tl}</b> · Belum selesai <b>${ks.filter(k=>(k.status||'Baru')!='Selesai').length}</b></p><h3>Kasus per jenis</h3>${bars(Object.entries(jn).slice(0,8).map(x=>[x[0].slice(0,8),x[1]]))}</div>
+<div class="card"><h3>⚖️ Tindak lanjut kasus</h3>${ks.slice().reverse().map(k=>`<div style="border-bottom:2px dashed var(--mid);padding:6px 0"><b>${E(k.nama)}</b> (${E(k.kelas)}) <span class="chip">${E(k.jenis)}</span><span class="chip">${E(k.tindakan)}</span><br><select ${w?'':'disabled'} onchange="setKs(${k.id},'status',this.value)">${o(ST,k.status||'Baru')}</select><input ${w?'':'disabled'} placeholder="Catatan tindak lanjut (hasil mediasi, SP, dll)" value="${E(k.tl||'')}" onchange="setKs(${k.id},'tl',this.value)">${(w||k.surat)?`<button class="g" onclick="openSurat(${k.id})">📨 ${k.surat?(w?'Lihat/Ubah Surat':'Lihat Surat'):'Buat Surat'}</button>`:''}${k.fotoSurat?`<img class="ft" src="${k.fotoSurat}" style="max-width:120px">`:''}</div>`).join('')||'<p>Belum ada kasus.</p>'}</div>
+${w?`<div class="card"><h3>🏅 Tambah kegiatan OSIS</h3><input id="oj" placeholder="Nama kegiatan"><div class="row"><div><label>Tanggal</label><input id="ot" type="date" value="${today()}"></div><div><label>Penanggung jawab</label><input id="op"></div><div><label>Status</label><select id="os">${o(OS)}</select></div></div><textarea id="oc2" rows="2" placeholder="Catatan"></textarea><label>Foto kegiatan (kamera atau galeri)</label><input id="of" type="file" accept="image/*"><button onclick="saveOs()">Simpan kegiatan</button></div>`:''}
+<h3 style="color:var(--car)">Kegiatan OSIS</h3>${D.osis.slice().reverse().map(x=>`<div class="card"><div id="o${x.id}" class="paper"><b>${E(x.judul)}</b> <span class="chip">${x.st}</span><p>${x.tgl} · PJ: ${E(x.pj)}</p><p>${E(x.cat)}</p>${x.foto?`<img class="ft" src="${x.foto}">`:''}</div>${w?`<select onchange="setOs(${x.id},this.value)">${o(OS,x.st)}</select><button class="r" onclick="delOs(${x.id})">Hapus</button>`:''}${dlb('o'+x.id,'osis-'+x.id)}</div>`).join('')||'<p>Belum ada kegiatan.</p>'}`}
+function setKs(id,f,v){const k=D.kasus.find(x=>x.id==id);k[f]=v;save('kasus')}
+function saveOs(){const f=$('#of').files[0],x={id:Date.now(),judul:$('#oj').value,tgl:$('#ot').value,pj:$('#op').value,st:$('#os').value,cat:$('#oc2').value};if(!x.judul)return toast('Isi nama kegiatan');const d=()=>{D.osis.push(x);save('osis');vKes()};f?foto(f,u=>{x.foto=u;d()}):d()}
+function setOs(id,v){D.osis.find(x=>x.id==id).st=v;save('osis')}
+function delOs(id){D.osis=D.osis.filter(x=>x.id!=id);save('osis');vKes()}
+// --- Sarpras ---
+const KAT=['Ruang','Perabot','Elektronik','Alat Lab','Olahraga','Lainnya'],KON=['Baik','Rusak Ringan','Rusak Berat'];
+function vSar(){const w=has('Sarpras'),c={};D.sarpras.forEach(a=>c[a.kon]=(c[a.kon]||0)+(+a.jml||0));
+$('#m').innerHTML=`<div class="card"><h2>🏗️ Sarana & Prasarana</h2>${w?`<input id="sa1" placeholder="Nama aset, mis. Proyektor"><div class="row"><div><label>Kategori</label><select id="sa2">${o(KAT)}</select></div><div><label>Jumlah</label><input id="sa3" type="number" value="1"></div><div><label>Kondisi</label><select id="sa4">${o(KON)}</select></div><div><label>Lokasi</label><input id="sa5" placeholder="mis. Ruang 7A"></div></div><textarea id="sa6" rows="2" placeholder="Catatan"></textarea><label>Foto (kamera atau galeri)</label><input id="sa7" type="file" accept="image/*"><button onclick="saveSar()">Simpan aset</button>`:'<small>Mode lihat saja.</small>'}</div>
+<div class="card"><div id="sarBox" class="paper"><h3 style="text-align:center">DATA SARANA & PRASARANA<br><small>${E(SK().nama)}</small></h3><p>Baik ${c.Baik||0} · Rusak ringan ${c['Rusak Ringan']||0} · Rusak berat ${c['Rusak Berat']||0}</p>${bars(KON.map(k=>[k,c[k]||0]))}<table><tr><th>No</th><th>Aset</th><th>Kategori</th><th>Jml</th><th>Kondisi</th><th>Lokasi</th><th>Catatan</th></tr>${D.sarpras.map((a,i)=>`<tr><td>${i+1}</td><td class="n">${E(a.nama)}</td><td>${a.kat}</td><td>${a.jml}</td><td>${a.kon}</td><td>${E(a.lok)}</td><td>${E(a.cat)}</td></tr>`).join('')}</table></div>${dlb('sarBox','data-sarpras')}</div>
+${w?D.sarpras.map((a,i)=>`<div class="card"><b>${E(a.nama)}</b> (${a.jml}) ${a.foto?`<img class="ft" src="${a.foto}">`:''}<select onchange="setSar(${i},this.value)">${o(KON,a.kon)}</select><button class="r" onclick="delSar(${i})">Hapus</button></div>`).join(''):''}`}
+function saveSar(){const f=$('#sa7').files[0],x={nama:$('#sa1').value,kat:$('#sa2').value,jml:$('#sa3').value,kon:$('#sa4').value,lok:$('#sa5').value,cat:$('#sa6').value};if(!x.nama)return toast('Isi nama aset');const d=()=>{D.sarpras.push(x);save('sarpras');vSar()};f?foto(f,u=>{x.foto=u;d()}):d()}
+function setSar(i,v){D.sarpras[i].kon=v;save('sarpras');vSar()}
+function delSar(i){D.sarpras.splice(i,1);save('sarpras');vSar()}
+// --- Dashboard Kepala Sekolah ---
+async function vPimp(){const gs=await api('gStat').catch(()=>null);const b=today().slice(0,7),[y,m]=b.split('-').map(Number),n=new Date(y,m,0).getDate(),kb=D.kasus.filter(k=>k.tgl.startsWith(b)),jn={},hk=[];kb.forEach(k=>jn[k.jenis]=(jn[k.jenis]||0)+1);
+Object.entries(D.rekap).filter(x=>x[0].endsWith('|'+b)).forEach(([k,v])=>{const kl=k.split('|')[0],lb=(v.libur||'').split(',').map(x=>+x.trim());let t=0,h=0;D.murid.filter(s=>s.kelas==kl).forEach(s=>{for(let i=1;i<=n;i++){const off=new Date(y,m-1,i).getDay()==0||lb.includes(i),c=((v.d||{})[s.nama]||{})[i]||(off?'-':'H');if(c!='-'){t++;if(c=='H')h++}}});hk.push([kl,t?Math.round(h/t*100):0])});
+const rb=D.sarpras.filter(a=>a.kon=='Rusak Berat').length,os=s=>D.osis.filter(x=>x.st==s).length;
+$('#m').innerHTML=`<div class="card"><div id="pimpBox" class="paper"><h3 style="text-align:center">RINGKASAN SEKOLAH — ${b}<br><small>${E(SK().nama)}</small></h3>
+<table><tr><th>Murid</th><th>Kelas</th><th>Kasus bln ini</th><th>Aset rusak berat</th><th>OSIS berjalan</th><th>Guru aktif</th></tr><tr><td>${D.murid.length}</td><td>${kelasList().length}</td><td>${kb.length}</td><td>${rb}</td><td>${os('Berjalan')}</td><td>${gs?gs.aktif:'-'}</td></tr></table>${gs?`<p>Guru: ${gs.aktif} aktif · ${gs.pending} menunggu · ${gs.nonaktif} nonaktif<br>${Object.entries(gs.peran).map(x=>`<span class="chip">${x[0]}: ${x[1]}</span>`).join('')}</p>`:''}
+<h3>% Kehadiran per kelas (bulan ini)</h3>${hk.length?bars(hk):'<p>Belum ada rekap bulan ini.</p>'}<h3>Kasus per jenis (bulan ini)</h3>${bars(Object.entries(jn).slice(0,8).map(x=>[x[0].slice(0,8),x[1]]))}
+<h3>Dokumentasi bulan ini: ${D.dok.filter(d=>d.tgl.startsWith(b)).length} kegiatan · Pengumuman: ${D.info.length}</h3></div>${dlb('pimpBox','ringkasan-sekolah')}</div>
+<p style="color:var(--mut);font-size:12px">Detail ada di tab Absensi, Kasus, Kesiswaan, Sarpras, dan Dokumen.</p>`}
+
+// ===== TANDA TANGAN (komponen bersama: nama, NIP, peran, ttd di layar) =====
+let TT=[],ttCE=false,ttHook=()=>{},ttPersist=()=>{};
+const myJab=()=>has('Waka Kesiswaan')?'Waka Kesiswaan':has('Wali Kelas')?'Wali Kelas '+(S.u.kelasWali||''):(S.u.roles[0]||'Guru');
+function ttBlock(l){return`<div style="display:flex;flex-wrap:wrap;justify-content:space-around;gap:14px 10px;margin-top:22px;color:#000;font-family:'Times New Roman',serif;font-size:14px">${l.map(s=>`<div style="width:46%;min-width:190px;text-align:center">${s.m?'Mengetahui,<br>':''}${E(s.jab)}<div style="height:74px;display:flex;align-items:center;justify-content:center">${s.img?`<img src="${s.img}" style="max-height:72px;max-width:100%">`:''}</div><b>${E(s.nama)}</b><br>${s.nip?'NIP.'+E(s.nip):''}</div>`).join('')}</div>`}
+function pad(cb){const d=document.createElement('div');d.style.cssText='position:fixed;inset:0;background:#000c;z-index:40;display:flex;align-items:center;justify-content:center;padding:16px';
+d.innerHTML=`<div class="card" style="width:100%;max-width:420px"><h3>✍️ Tanda tangan di layar</h3><canvas width="380" height="160" style="width:100%;border:3px solid var(--ink);border-radius:12px;background:#fff;touch-action:none"></canvas><button id="ps">Simpan</button><button class="g" id="pc">Hapus</button><button class="r" id="px">Batal</button></div>`;document.body.appendChild(d);
+const c=d.querySelector('canvas'),x=c.getContext('2d');x.lineWidth=2.6;x.lineCap='round';let dr=false;const pt=e=>{const r=c.getBoundingClientRect();return[(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]};
+c.onpointerdown=e=>{dr=true;x.beginPath();x.moveTo(...pt(e));c.setPointerCapture(e.pointerId)};c.onpointermove=e=>{if(dr){x.lineTo(...pt(e));x.stroke()}};c.onpointerup=()=>dr=false;
+d.querySelector('#pc').onclick=()=>x.clearRect(0,0,c.width,c.height);d.querySelector('#px').onclick=()=>d.remove();d.querySelector('#ps').onclick=()=>{cb(c.toDataURL('image/png'));d.remove()}}
+function ttEditor(ce){const d=ce?'':'disabled';return`<h3>✍️ Penandatangan</h3>${TT.map((s,i)=>`<div style="border:2px dashed var(--mid);padding:6px;margin-bottom:6px"><div class="row"><div><label>Jabatan/peran</label><input ${d} value="${E(s.jab)}" oninput="TT[${i}].jab=this.value;ttHook()"></div><div><label>Nama</label><input ${d} value="${E(s.nama)}" oninput="TT[${i}].nama=this.value;ttHook()"></div><div><label>NIP</label><input ${d} value="${E(s.nip)}" oninput="TT[${i}].nip=this.value;ttHook()"></div></div>
+<label><input type="checkbox" style="width:auto;margin:0" ${s.m?'checked':''} ${d} onchange="TT[${i}].m=this.checked;ttHook()"> Awali dengan "Mengetahui,"</label><br><button class="t" onclick="signAt(${i})">✍️ Tanda tangan di layar</button>${s.img?`<button class="g" onclick="TT[${i}].img='';ttHook();ttRe();ttPersist()">Hapus ttd</button>`:''}${ce?`<button class="r" onclick="TT.splice(${i},1);ttHook();ttRe()">Hapus penandatangan</button>`:''}</div>`).join('')}
+${ce?`<button class="g" onclick="ttAdd('kep')">+ Kepala Sekolah</button><button class="g" onclick="ttAdd('me')">+ Saya (${E(S.u.nama)})</button><button class="g" onclick="ttAdd('')">+ Orang lain</button>`:''}`}
+const ttRe=()=>{const e=$('#tte');if(e)e.innerHTML=ttEditor(ttCE)};
+function ttAdd(k){TT.push(k=='kep'?{jab:'Kepala '+(SK().nama||''),nama:SK().ksNama||'',nip:SK().ksNip||'',m:1,img:''}:k=='me'?{jab:myJab(),nama:S.u.nama,nip:S.u.nip,m:0,img:''}:{jab:'',nama:'',nip:'',m:0,img:''});ttRe();ttHook()}
+function signAt(i){pad(img=>{TT[i].img=img;ttHook();ttRe();ttPersist()})}
+// ===== SURAT RESMI KASUS (Panggilan Ortu, Mediasi, SP) =====
+const SJ=['Panggilan Orang Tua','Undangan Mediasi','Surat Peringatan 1','Surat Peringatan 2','Surat Peringatan 3'];
+const fT=(d,wd)=>d?new Date(d).toLocaleDateString('id-ID',{weekday:wd?'long':undefined,day:'numeric',month:'long',year:'numeric'}):'…';
+let SKid=0;
+function openSurat(id){SKid=id;const k=D.kasus.find(x=>x.id==id),s=k.surat||{},w=has('Waka Kesiswaan'),back=has('Waka Kesiswaan','Kepala Sekolah')?'kesiswaan':'kasus';
+if(!w&&!k.surat)return toast('Belum ada surat untuk kasus ini');
+const jd=s.jenis||(/SP\) 1/.test(k.tindakan)?SJ[2]:/SP\) 2/.test(k.tindakan)?SJ[3]:/SP\) 3/.test(k.tindakan)?SJ[4]:/Mediasi/.test(k.tindakan)?SJ[1]:SJ[0]);
+TT=s.ttd&&s.ttd.length?JSON.parse(JSON.stringify(s.ttd)):[{jab:'Waka Kesiswaan',nama:S.u.nama,nip:S.u.nip,m:0,img:''},{jab:'Kepala '+(SK().nama||''),nama:SK().ksNama||'',nip:SK().ksNip||'',m:1,img:''}];
+ttCE=w;ttHook=rSurat;ttPersist=()=>{if(k.surat){k.surat.ttd=TT;save('kasus')}};
+$('#m').innerHTML=`<button class="g" onclick="go('${back}')">← Kembali</button>${w?`<div class="card"><h2>📨 Surat Resmi</h2><p><b>${E(k.nama)}</b> (${E(k.kelas)}) — ${E(k.jenis)}</p><label>Jenis surat</label><select id="zj" onchange="rSurat()">${o(SJ,jd)}</select>
+<div class="row"><div><label>Nomor surat</label><input id="zn" value="${E(s.no||'')}" oninput="rSurat()" placeholder="mis. 421.3/012/2026"></div><div><label>Tanggal surat</label><input id="zt" type="date" value="${s.tgl||today()}" oninput="rSurat()"></div></div>
+<div class="row"><div><label>Tanggal pertemuan</label><input id="zp" type="date" value="${s.tglP||''}" oninput="rSurat()"></div><div><label>Jam</label><input id="zh" value="${E(s.jam||'08.00 WIB')}" oninput="rSurat()"></div><div><label>Tempat</label><input id="zl" value="${E(s.tmp||'Ruang Kesiswaan')}" oninput="rSurat()"></div></div>
+<label>Alamat (dipakai hanya jika kop belum diatur admin di Setelan)</label><input id="za" value="${E(s.alamat||ls('alamat')||'')}" oninput="rSurat()"><label>Foto bukti surat/panggilan (kamera atau galeri)</label><input id="zf" type="file" accept="image/*"></div>`:''}
+<div class="card"><div id="tte">${ttEditor(w)}</div>${w?`<button onclick="saveSurat()">💾 Simpan ke catatan kasus</button>`:'<small>Kamu bisa menandatangani bagianmu lalu tanda tangan tersimpan otomatis.</small>'}</div>
+<div class="card"><div id="suratBox" class="paper"></div>${dlb('suratBox','surat-'+id)}</div>${k.fotoSurat?`<div class="card"><h3>Bukti surat/panggilan</h3><img class="ft" src="${k.fotoSurat}"></div>`:''}`;rSurat()}
+function sv(){const k=D.kasus.find(x=>x.id==SKid);return has('Waka Kesiswaan')?{jenis:$('#zj').value,no:$('#zn').value,tgl:$('#zt').value,tglP:$('#zp').value,jam:$('#zh').value,tmp:$('#zl').value,alamat:$('#za').value}:k.surat}
+function rSurat(){const k=D.kasus.find(x=>x.id==SKid),v=sv(),sp=SJ.indexOf(v.jenis),n=E(k.nama),pl=`${E(k.jenis)}${k.catatan?' ('+E(k.catatan)+')':''}`;let isi;
+const tr=(a,b)=>`<tr><td style="border:0;text-align:left">${a}</td><td style="border:0;text-align:left">: ${b}</td></tr>`;
+if(sp<2)isi=`<p>Dengan hormat,</p><p style="text-align:justify">Sehubungan dengan permasalahan yang melibatkan putra/putri Bapak/Ibu, <b>${n}</b> (kelas ${E(k.kelas)}), berupa ${pl} pada ${fT(k.tgl,1)}, kami mohon kehadiran Bapak/Ibu ${sp==1?'untuk mengikuti mediasi bersama pihak-pihak terkait':'untuk berdiskusi mengenai pembinaan ananda'} pada:</p><table style="border:0;margin-left:20px;width:auto">${tr('Hari/Tanggal',fT(v.tglP,1))}${tr('Pukul',E(v.jam))}${tr('Tempat',E(v.tmp))}</table><p style="text-align:justify">Mengingat pentingnya hal tersebut, kehadiran Bapak/Ibu sangat kami harapkan. Demikian surat ini kami sampaikan, atas perhatian dan kerja samanya kami ucapkan terima kasih.</p>`;
+else{const t=['pertama','kedua','ketiga'][sp-2],l=['Apabila pelanggaran terulang, sekolah akan memberikan peringatan lanjutan.','Apabila pelanggaran terulang, sekolah akan menindaklanjuti sesuai tata tertib sekolah dan ketentuan yang berlaku.','Ini merupakan peringatan tertulis terakhir; pelanggaran berikutnya akan ditindaklanjuti sesuai tata tertib sekolah dan ketentuan yang berlaku.'][sp-2];
+isi=`<p>Dengan hormat,</p><p style="text-align:justify">Berdasarkan catatan kesiswaan, <b>${n}</b> (kelas ${E(k.kelas)}) telah melakukan pelanggaran tata tertib sekolah berupa ${pl} pada ${fT(k.tgl,1)}. Sehubungan dengan itu, sekolah memberikan <b>Surat Peringatan ${sp-1}</b> sebagai teguran tertulis ${t}.</p><p style="text-align:justify">Kami berharap ananda memperbaiki sikap dan Bapak/Ibu turut membimbing di rumah. ${l}</p><p>Demikian surat ini disampaikan agar menjadi perhatian.</p>`}
+const ttw=TT.concat([{jab:'Orang Tua/Wali Murid',nama:'(..................)',nip:'',m:0,img:''}]);
+$('#suratBox').innerHTML=`${kop(v.alamat)}<div style="font-family:'Times New Roman',serif;color:#000;font-size:14px"><p style="text-align:right">${fT(v.tgl)}</p><table style="border:0;width:auto">${tr('Nomor',E(v.no)||'…')}${tr('Lampiran','-')}${tr('Perihal','<b>'+E(v.jenis)+'</b>')}</table><p>Kepada Yth.<br>Bapak/Ibu Orang Tua/Wali Murid dari ${n}<br>Kelas ${E(k.kelas)}<br>di tempat</p>${isi}${ttBlock(ttw)}</div>`}
+function saveSurat(){const k=D.kasus.find(x=>x.id==SKid),v=sv(),f=$('#zf').files[0];ls('alamat',v.alamat);v.ttd=TT;k.surat=v;if(!k.tl)k.tl=v.jenis+' diterbitkan '+v.tgl;const d=()=>{save('kasus');toast('Surat tersimpan di catatan kasus');openSurat(SKid)};f?foto(f,u=>{k.fotoSurat=u;d()}):d()}
+// ===== TATA USAHA: agenda surat + surat resmi umum =====
+let tuSub='agenda',AG=null,agF='Semua';const SK_LETTER=['Undangan','Surat Keterangan','Surat Tugas','Pemberitahuan','Surat Edaran','Lainnya'];
+function vTU(){const w=has('Tata Usaha');$('#m').innerHTML=`<div class="row"><button class="${tuSub=='agenda'?'':'g'}" onclick="tuSub='agenda';AG=null;vTU()">🗂️ Agenda Surat</button><button class="${tuSub=='buat'?'':'g'}" onclick="tuSub='buat';vTU()" ${(w||AG)?'':'disabled'}>✉️ Surat Resmi</button></div>`+(tuSub=='agenda'?tuAgenda(w):tuBuat())}
+function tuAgenda(w){const L=D.agenda.filter(x=>agF=='Semua'||x.jenis==agF);
+return(w?`<div class="card"><h3>➕ Catat surat masuk / keluar</h3><div class="row"><div><label>Jenis</label><select id="aj"><option>Masuk</option><option>Keluar</option></select></div><div><label>Nomor surat</label><input id="an"></div><div><label>Tgl surat</label><input id="at2" type="date" value="${today()}"></div><div><label>Tgl diterima/dikirim</label><input id="at3" type="date" value="${today()}"></div></div><label>Asal / Tujuan</label><input id="ap"><label>Perihal</label><input id="ah"><label>Keterangan</label><input id="ak2"><label>Foto/scan surat (kamera atau galeri)</label><input id="af" type="file" accept="image/*"><button onclick="saveAg()">Simpan ke agenda</button></div>`:'')+
+`<div class="card"><label>Tampilkan</label><select onchange="agF=this.value;vTU()">${o(['Semua','Masuk','Keluar'],agF)}</select><div id="agBox" class="paper">${kop()}<h3 style="text-align:center">AGENDA SURAT ${agF=='Semua'?'MASUK & KELUAR':agF.toUpperCase()}</h3><table><tr><th>No Agenda</th><th>Jenis</th><th>Nomor Surat</th><th>Tgl Surat</th><th>Asal/Tujuan</th><th>Perihal</th><th>Ket</th></tr>${L.map(x=>`<tr><td>${x.agenda}</td><td>${x.jenis}</td><td>${E(x.nomor)}</td><td>${x.tglS}</td><td>${E(x.pihak)}</td><td>${E(x.perihal)}</td><td>${E(x.ket)}</td></tr>`).join('')}</table></div>${dlb('agBox','agenda-surat')}</div>`+
+L.slice().reverse().map(x=>`<div class="card"><b>${x.agenda}</b> <span class="chip">${x.jenis}</span> ${E(x.perihal)}<br>${x.surat?`<button class="g" onclick="AG=${x.id};tuSub='buat';vTU()">📄 Buka surat / tanda tangan</button>`:''}${x.foto?`<img class="ft" src="${x.foto}" style="max-width:160px">`:''}${w?`<button class="r" onclick="delAg(${x.id})">Hapus</button>`:''}</div>`).join('')}
+function nomAg(j,tgl){return String(D.agenda.filter(x=>x.jenis==j&&x.tglS.slice(0,4)==tgl.slice(0,4)).length+1).padStart(3,'0')}
+function saveAg(){const j=$('#aj').value,x={id:Date.now(),jenis:j,agenda:nomAg(j,$('#at2').value),nomor:$('#an').value,tglS:$('#at2').value,tgl2:$('#at3').value,pihak:$('#ap').value,perihal:$('#ah').value,ket:$('#ak2').value};if(!x.perihal)return toast('Isi perihal');const f=$('#af').files[0],d=()=>{D.agenda.push(x);save('agenda');vTU()};f?foto(f,u=>{x.foto=u;d()}):d()}
+function delAg(id){D.agenda=D.agenda.filter(x=>x.id!=id);save('agenda');vTU()}
+function tuBuat(){const w=has('Tata Usaha'),it=AG?D.agenda.find(x=>x.id==AG):null,s=it?it.surat:{},d=w?'':'disabled';
+TT=s.ttd&&s.ttd.length?JSON.parse(JSON.stringify(s.ttd)):(w?[{jab:'Kepala '+(SK().nama||''),nama:SK().ksNama||'',nip:SK().ksNip||'',m:0,img:''}]:[]);
+ttCE=w;ttHook=rLetter;ttPersist=()=>{if(it){it.surat.ttd=TT;save('agenda')}};setTimeout(rLetter,0);
+return`<div class="card"><h2>✉️ Surat Resmi</h2><div class="row"><div><label>Jenis</label><select id="lj" ${d} onchange="rLetter()">${o(SK_LETTER,s.kind)}</select></div><div><label>Nomor surat</label><input id="ln" ${d} value="${E(s.no||'')}" oninput="rLetter()"></div><div><label>Tanggal</label><input id="ld" type="date" ${d} value="${s.tgl||today()}" oninput="rLetter()"></div></div>
+<div class="row"><div><label>Tempat (kota)</label><input id="lk" ${d} value="${E(s.tempat||ls('tempat')||'')}" oninput="rLetter()"></div><div><label>Lampiran</label><input id="ll" ${d} value="${E(s.lamp||'-')}" oninput="rLetter()"></div></div>
+<label>Perihal</label><input id="lp" ${d} value="${E(s.perihal||'')}" oninput="rLetter()"><label>Kepada Yth.</label><input id="lt" ${d} value="${E(s.tujuan||'')}" oninput="rLetter()" placeholder="mis. Bapak/Ibu Guru dan Staf"><label>Isi surat (satu paragraf per baris)</label><textarea id="li" rows="6" ${d} oninput="rLetter()">${E(s.isi||'')}</textarea>${w?`<button class="t" onclick="aiLetter()">🤖 Susun isi dengan AI (dari poin-poin di atas)</button>`:''}<div id="tte">${ttEditor(w)}</div>${w?`<button onclick="saveLetter()">💾 Simpan & catat di agenda</button>`:''}</div><div class="card"><div id="lbox" class="paper"></div>${dlb('lbox','surat-resmi')}</div>`}
+function lv(){return{kind:$('#lj').value,no:$('#ln').value,tgl:$('#ld').value,tempat:$('#lk').value,lamp:$('#ll').value,perihal:$('#lp').value,tujuan:$('#lt').value,isi:$('#li').value}}
+function rLetter(){if(!$('#lbox'))return;const v=lv(),tr=(a,b)=>`<tr><td style="border:0;text-align:left">${a}</td><td style="border:0;text-align:left">: ${b}</td></tr>`;
+$('#lbox').innerHTML=`${kop()}<div style="font-family:'Times New Roman',serif;color:#000;font-size:14px"><p style="text-align:right">${E(v.tempat)}${v.tempat?', ':''}${fT(v.tgl)}</p><table style="border:0;width:auto">${tr('Nomor',E(v.no)||'…')}${tr('Lampiran',E(v.lamp))}${tr('Hal','<b>'+E(v.perihal)+'</b>')}</table><p>Yth. ${E(v.tujuan)}<br>di tempat</p>${v.isi.split('\n').filter(x=>x.trim()).map(x=>`<p style="text-align:justify">${E(x)}</p>`).join('')}${ttBlock(TT)}</div>`}
+async function aiLetter(){const v=lv();if(!v.perihal)return toast('Isi perihal dan poin-poin dulu');toast('Menyusun isi surat… ☕');try{$('#li').value=(await panggilAI(`Tuliskan isi ${v.kind} resmi sekolah SMP dalam bahasa Indonesia baku. Hanya isi surat (pembuka, isi, penutup), satu paragraf per baris, tanpa kop, tanpa tanda tangan, tanpa markdown. Perihal: ${v.perihal}. Ditujukan kepada: ${v.tujuan}. Poin/rincian dari pengirim: ${v.isi}`)).replace(/[*#]/g,'');rLetter()}catch(e){toast(e.message)}}
+function saveLetter(){const v=lv();if(!v.perihal)return toast('Isi perihal');ls('tempat',v.tempat);v.ttd=TT;let it=AG?D.agenda.find(x=>x.id==AG):null;
+if(it){it.surat=v;it.perihal=v.perihal;it.pihak=v.tujuan;it.nomor=v.no}else{it={id:Date.now(),jenis:'Keluar',agenda:nomAg('Keluar',v.tgl),nomor:v.no,tglS:v.tgl,tgl2:v.tgl,pihak:v.tujuan,perihal:v.perihal,ket:'',surat:v};D.agenda.push(it);AG=it.id}
+save('agenda');toast('Tersimpan & tercatat di agenda')}
+
+// ===== KOP SURAT (per sekolah: teks + logo kiri/kanan) =====
+function kop(al){const c=D.kop&&D.kop.n?D.kop:null,T="font-family:'Times New Roman',serif;";
+if(!c)return`<div style="text-align:center;border-bottom:4px double #000;padding-bottom:6px;margin-bottom:10px"><b style="${T}font-size:18px">${E((SK().nama||'').toUpperCase())}</b>${al?`<br><i style="${T}font-size:12px">${E(al)}</i>`:''}</div>`;
+const lg=s=>s?`<img src="${s}" style="height:72px;max-width:80px;object-fit:contain">`:'';
+return`<div style="border-bottom:5px double #000;padding-bottom:6px;margin-bottom:12px"><table style="width:100%;border:0"><tr><td style="border:0;width:84px;text-align:center">${lg(c.l1)}</td><td style="border:0;text-align:center;line-height:1.25;color:#000">${c.p?`<div style="${T}font-weight:bold;font-size:15px">${E(c.p.toUpperCase())}</div>`:''}<div style="${T}font-weight:bold;font-size:20px">${E(c.n.toUpperCase())}</div>${c.k?`<div style="${T}font-weight:bold;font-size:15px">${E(c.k.toUpperCase())}</div>`:''}<div style="${T}font-style:italic;font-size:12px">${E(c.a||'')}</div></td><td style="border:0;width:84px;text-align:center">${lg(c.l2)}</td></tr></table></div>`}
+function kopForm(){const c=D.kop||{};setTimeout(kopPrev,0);return`<div class="card"><h2>🖼️ Kop Surat</h2><p style="font-size:12px">Dipakai di surat resmi, rekap absensi, RPL, dan modul ajar. Tiap sekolah mengisi sendiri.</p>
+<label>Baris 1 (mis. PEMERINTAH KABUPATEN KATINGAN)</label><input id="kp1" value="${E(c.p||'')}" oninput="kopPrev()"><label>Baris 2 — nama sekolah</label><input id="kp2" value="${E(c.n||SK().nama||'')}" oninput="kopPrev()"><label>Baris 3 (mis. KECAMATAN KATINGAN HILIR)</label><input id="kp3" value="${E(c.k||'')}" oninput="kopPrev()"><label>Alamat</label><input id="kp4" value="${E(c.a||'')}" oninput="kopPrev()">
+<div class="row"><div><label>Logo kiri (PNG/JPG)</label><input type="file" accept="image/*" onchange="kopLogo(this,'l1')"></div><div><label>Logo kanan</label><input type="file" accept="image/*" onchange="kopLogo(this,'l2')"></div></div>
+<label>Pratinjau</label><div id="kpv" class="paper"></div><button onclick="saveKop()">💾 Simpan kop</button><button class="g" onclick="D.kop.l1='';D.kop.l2='';kopPrev()">Hapus logo</button></div>`}
+function kopRead(){D.kop=Object.assign(D.kop||{},{p:$('#kp1').value,n:$('#kp2').value,k:$('#kp3').value,a:$('#kp4').value})}
+function kopPrev(){if(!$('#kpv'))return;kopRead();$('#kpv').innerHTML=kop()}
+function kopLogo(el,w){const f=el.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,240/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);kopRead();D.kop[w]=c.toDataURL('image/png');kopPrev()};im.src=r.result};r.readAsDataURL(f)}
+function saveKop(){kopRead();save('kop');toast('Kop surat tersimpan')}
+
+
+// ===== DOKUMENTASI & BUKU TAMU (catatan rahasia konseling disimpan terpusat di server, bukan di Sheet sekolah) =====
+let dkSub='doc',RC=[];
+async function vDok(){dkSub=='doc'?await vDokDoc():await vTamu();$('#m').insertAdjacentHTML('afterbegin',`<div class="row"><button class="${dkSub=='doc'?'':'g'}" onclick="dkSub='doc';vDok()">📸 Dokumentasi</button><button class="${dkSub=='tamu'?'':'g'}" onclick="dkSub='tamu';vDok()">📒 Buku Tamu</button></div>`)}
+const HUB=['Orang tua/wali murid','Murid (konseli)','Tamu dinas/instansi','Alumni','Lainnya'],SH=['Kepala Sekolah','Waka Kesiswaan','Wali Kelas','Guru BK lain'];
+const rl=async()=>{try{RC=OWNER_URL?await api('rhsList'):[]}catch(e){RC=[]}return RC};
+function rhsBox(t){return`<div style="border:2px dashed var(--mid);padding:8px;margin:6px 0"><label><input type="checkbox" id="tp" style="width:auto;margin:0" checked onchange="$('#shb').style.display=this.checked?'block':'none'"> ${t}</label><div id="shb"><p style="font-size:12px;margin:6px 0">Keadaan khusus saja (mis. keselamatan murid terancam): boleh dibagikan ke pihak tertentu. Kosongkan jika tidak ada.</p>${SH.map(s=>`<label style="margin-right:8px"><input type="checkbox" style="width:auto;margin:0" class="sh" value="${s}"> ${s}</label>`).join('')}<input id="ta" placeholder="Alasan keadaan khusus (wajib bila membagikan)"><small>Wali Kelas hanya melihat jika kelas murid cocok dengan kelas walinya.</small></div><small>🔐 Catatan rahasia disimpan terpisah dari Sheet sekolah, tidak bisa dibuka admin sekolah.</small></div>`}
+function rhsRead(){const priv=$('#tp')?$('#tp').checked:false;return{priv,share:priv?[...document.querySelectorAll('.sh:checked')].map(c=>c.value):[],al:$('#ta')?$('#ta').value.trim():''}}
+function rhsOk(r,kelas){if(r.share.length&&!r.al){toast('Isi alasan keadaan khusus');return false}if(r.share.includes('Wali Kelas')&&!kelas){toast('Pilih kelas murid agar wali kelas yang tepat bisa melihat');return false}return true}
+async function vDokDoc(){const bk=has('Guru BK'),jn=bk?'Layanan':has('Guru Mapel')?'Pembelajaran':'Kegiatan Umum',R=(await rl()).filter(x=>x.kind=='dok'),mine=D.dok.filter(d=>!d.priv&&(d.nip==S.u.nip||has('Kepala Sekolah'))).concat(R).sort((a,b)=>a.id-b.id);
+$('#m').innerHTML=`<div id="shc"></div><div class="card"><h3>📸 Dokumentasi ${jn}</h3><input id="dj" placeholder="Judul kegiatan"><label>Tanggal</label><input id="dt" type="date" value="${today()}"><textarea id="dk" rows="3" placeholder="Uraian singkat kegiatan"></textarea>${bk?`<label>Kelas murid (bila layanan untuk murid tertentu)</label><select id="tkl"><option value="">-</option>${kelasList().map(k=>`<option>${k}</option>`).join('')}</select>`:''}<label>Unggah bukti kegiatan (kamera atau galeri)</label><input id="df" type="file" accept="image/*">${bk?rhsBox('🔒 Layanan konseling individual (rahasia) — hanya aku (guru BK) yang bisa melihat'):''}<button onclick="saveD('${jn}')">Simpan dokumentasi</button></div>
+${mine.slice().reverse().map(d=>`<div class="card"><div id="d${d.id}" class="paper"><h3>${d.priv?'🔒 ':''}${E(d.judul)} <small>(${d.jenis})</small></h3><p>${d.tgl} · ${E(d.oleh)}</p><p>${E(d.ket)}</p>${d.foto?`<img class="ft" src="${d.foto}">`:''}</div>${dlb('d'+d.id,'dokumentasi-'+d.id)}${(d.priv&&d.nip==S.u.nip)?`<button class="g" onclick="shareEdit(${d.id})">Atur pembagian</button>`:''}</div>`).join('')}`}
+async function saveD(jn){const f=$('#df').files[0],r=$('#tp')?rhsRead():{priv:false,share:[],al:''},x={id:Date.now(),nip:S.u.nip,oleh:S.u.nama,jenis:jn,judul:$('#dj').value,tgl:$('#dt').value,ket:$('#dk').value,kelas:$('#tkl')?$('#tkl').value:''};if(!x.judul)return toast('Isi judul');if(!rhsOk(r,x.kelas))return;
+const fin=async()=>{if(r.priv){Object.assign(x,{kind:'dok',priv:true,share:r.share,alasan:r.al});if(!await T(api('rhsSave',{d:x})))return}else{D.dok.push(x);save('dok')}toast('Tersimpan');vDok()};f?foto(f,u=>{x.foto=u;fin()}):fin()}
+async function vTamu(){const u=S.u,bk=has('Guru BK'),R=(await rl()).filter(x=>x.kind=='tamu'),pub=D.tamu.filter(x=>!x.priv&&(x.nip==u.nip||has('Kepala Sekolah','Waka Kesiswaan','Tata Usaha'))),L=pub.concat(R).sort((a,b)=>b.id-a.id),mine=R.filter(x=>x.nip==u.nip);
+$('#m').innerHTML=`<div id="shc"></div><div class="card"><h3>📒 Buku Tamu / Kunjungan</h3><div class="row"><div><label>Tanggal</label><input id="tg" type="date" value="${today()}"></div><div><label>Jam</label><input id="tj" type="time" value="${new Date().toTimeString().slice(0,5)}"></div></div><label>Nama tamu</label><input id="tn"><div class="row"><div><label>Hubungan/asal</label><select id="th">${o(HUB)}</select></div><div><label>Murid terkait (opsional)</label><input id="tm"></div><div><label>Kelas murid</label><select id="tkl"><option value="">-</option>${kelasList().map(k=>`<option>${k}</option>`).join('')}</select></div></div><label>Keperluan</label><input id="tk"><label>Catatan</label><textarea id="tc" rows="2"></textarea><label>Foto (opsional, kamera atau galeri)</label><input id="tf" type="file" accept="image/*">${bk?rhsBox('🔒 Rahasia konseling — hanya aku (guru BK) yang bisa melihat'):''}<button onclick="saveTamu()">Simpan kunjungan</button></div>
+<div class="card"><div id="tmBox" class="paper">${kop()}<h3 style="text-align:center">BUKU TAMU</h3><table><tr><th>Tgl</th><th>Jam</th><th>Nama</th><th>Hubungan</th><th>Murid</th><th>Keperluan</th><th>Catatan</th><th>Menemui</th></tr>${L.map(x=>`<tr><td>${x.tgl}</td><td>${x.jam}</td><td>${E(x.nama)}</td><td>${x.hub}</td><td>${E(x.murid)}</td><td>${x.priv?'🔒 ':''}${E(x.perlu)}</td><td>${E(x.cat)}</td><td>${E(x.oleh)}</td></tr>`).join('')}</table></div>${dlb('tmBox','buku-tamu')}</div>
+${mine.length?`<div class="card"><h3>🔒 Catatan konseling saya</h3>${mine.map(x=>`<p><b>${E(x.nama)}</b> · ${x.tgl} · ${x.share&&x.share.length?'dibagi ke: '+x.share.join(', '):'hanya saya'} <button class="g" onclick="shareEdit(${x.id})">Atur pembagian</button></p>`).join('')}</div>`:''}
+${L.filter(x=>x.foto).map(x=>`<div class="card"><b>${E(x.nama)}</b> · ${x.tgl}<br><img class="ft" src="${x.foto}" style="max-width:200px"></div>`).join('')}`}
+async function saveTamu(){const r=rhsRead(),x={id:Date.now(),nip:S.u.nip,oleh:S.u.nama,tgl:$('#tg').value,jam:$('#tj').value,nama:$('#tn').value.trim(),hub:$('#th').value,murid:$('#tm').value,kelas:$('#tkl').value,perlu:$('#tk').value,cat:$('#tc').value};if(!x.nama)return toast('Isi nama tamu');if(!rhsOk(r,x.kelas))return;
+const f=$('#tf').files[0],fin=async()=>{if(r.priv){Object.assign(x,{kind:'tamu',priv:true,share:r.share,alasan:r.al});if(!await T(api('rhsSave',{d:x})))return}else{D.tamu.push(x);save('tamu')}toast('Kunjungan tercatat');vDok()};f?foto(f,u=>{x.foto=u;fin()}):fin()}
+function shareEdit(id){const x=RC.find(y=>y.id==id);if(!x)return;$('#shc').innerHTML=`<div class="card"><h3>🔓 Pembagian: ${E(x.nama||x.judul)}</h3><p style="font-size:12px">Hanya untuk keadaan khusus. Wali Kelas hanya melihat jika kelas murid cocok.</p><p>${SH.map(s=>`<label style="margin-right:8px"><input type="checkbox" style="width:auto;margin:0" class="sh2" value="${s}" ${(x.share||[]).includes(s)?'checked':''}> ${s}</label>`).join('')}</p><input id="ta2" placeholder="Alasan keadaan khusus" value="${E(x.alasan||'')}"><button onclick="saveShare(${id})">Simpan</button><button class="g" onclick="$('#shc').innerHTML=''">Tutup</button></div>`;scrollTo(0,0)}
+async function saveShare(id){const x=RC.find(y=>y.id==id),sh=[...document.querySelectorAll('.sh2:checked')].map(c=>c.value),al=$('#ta2').value.trim();if(!rhsOk({share:sh,al},x.kelas))return;if(!await T(api('rhsShare',{id,share:sh,alasan:al})))return;toast('Pembagian disimpan');vDok()}
+
+// ===== RPP saja untuk guru mapel =====
+async function genRppM(){if(!gv('rm')||!gv('rmt'))return toast('Isi mapel dan materi');const c=$('#rppmBox'),b=$('#b-rppm');$('#a-rppm').style.display='block';b.disabled=true;c.innerHTML='Sedang menyeduh RPP… ☕';
+const p=`Saya guru ${gv('rm')} SMP. ${ident()} Materi: "${gv('rmt')}". Alokasi waktu: ${gv('ral')}. Buatkan RPP sesuai Kurikulum Merdeka dan pendekatan Pembelajaran Mendalam (berkesadaran, bermakna, menggembirakan; pengalaman belajar memahami, mengaplikasi, merefleksi). Keluarkan HANYA HTML murni (tanpa markdown/backtick), gunakan h2/h3, p, ul, ol, table border=1. Sertakan: identitas, capaian dan tujuan pembelajaran, dimensi profil lulusan, pertanyaan pemantik, sarana, model/metode, kegiatan pendahuluan-inti-penutup dengan alokasi waktu, asesmen, refleksi singkat. Jangan buat tanda tangan.`;
+try{c.innerHTML=kop()+bersih(await panggilAI(p))+sig();toast('✨ RPP selesai')}catch(e){c.textContent='❌ Gagal: '+e.message}finally{b.disabled=false}}
+
+
+init();
+</script></body></html>
