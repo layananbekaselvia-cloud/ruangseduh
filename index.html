@@ -59,6 +59,7 @@ function J(o){return ContentService.createTextOutput(JSON.stringify(o)).setMimeT
 function hx(s){return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,s).map(function(b){return('0'+(b&255).toString(16)).slice(-2)}).join('')}
 function H(id,pin){return hx('rs|'+id+'|'+pin)}
 function np(n){var c='ABCDEFGHJKMNPQRSTUVWXYZ23456789',s='';for(var i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s}
+function nw(n){var d=String(n||'').replace(/\D/g,'');if(!d)return'';d=d.replace(/^00/,'');if(d.indexOf('620')==0)d='62'+d.substr(3);if(d.charAt(0)=='0')d='62'+d.substr(1);else if(d.charAt(0)=='8')d='62'+d;return d}
 function reg(){return rd('sekolah')||[]}
 function pub(g){var c={};for(var k in g)if(k!='ph')c[k]=g[k];c.hasPin=!!g.ph;return c}
 function tok(o){var t=np(24);CacheService.getScriptCache().put('t'+t,JSON.stringify(o),21600);return t}
@@ -68,11 +69,11 @@ function NK(s){return String(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'').repla
 function info(x,o){var k=ks(x);return{t:tok(o),id:x.id,url:x.url,nama:x.nama,wa:x.wa,ksNama:k.ksNama,ksNip:k.ksNip}}
 function run(p){var a=p.a,r,g,x,q,s,sid,pin;
 if(a=='list')return reg().filter(function(i){return i.status=='aktif'}).map(function(i){return{id:i.id,nama:i.nama,wa:i.wa}});
-if(a=='daftarSekolah'){if(!p.nama||!p.w)throw'Data kurang';r=reg();r.push({id:np(6).toLowerCase(),nama:p.nama,adminNama:p.adm,wa:p.w,status:'pending',ph:'',url:'',ksNama:'',ksNip:''});wr('sekolah',r);return'ok'}
+if(a=='daftarSekolah'){if(!p.nama||!p.w)throw'Data kurang';r=reg();r.push({id:np(6).toLowerCase(),nama:p.nama,adminNama:p.adm,wa:nw(p.w),status:'pending',ph:'',url:'',ksNama:'',ksNip:''});wr('sekolah',r);return'ok'}
 if(a=='ownerLogin'){if(!p.oc||p.oc!=P.getProperty('OWNER_CODE'))throw'Kode salah';return{t:tok({r:'owner'})}}
 if(a=='adminLogin'){x=reg().filter(function(i){return i.id==p.sid})[0];if(!x||x.status!='aktif'||!x.ph||x.ph!=H(x.id,p.pin))throw'PIN admin salah atau sekolah belum aktif';return info(x,{r:'admin',sid:x.id})}
 if(a=='guruDaftar'){x=reg().filter(function(i){return i.id==p.sid})[0];if(!x||x.status!='aktif')throw'Sekolah tidak aktif';q=JSON.parse(p.d);if(!q.nip||!q.nama)throw'Data kurang';g=rd('guru:'+x.id)||[];if(g.some(function(i){return i.nip==q.nip}))throw'NIP sudah terdaftar';
-g.push({nip:String(q.nip),nama:q.nama,wa:q.wa||'',ph:'',status:'pending',roles:q.roles||[],kelasWali:q.kelasWali||'',kelas:q.kelas||'',piket:q.piket||''});wr('guru:'+x.id,g);return'ok'}
+g.push({nip:String(q.nip),nama:q.nama,wa:nw(q.wa),ph:'',status:'pending',roles:q.roles||[],kelasWali:q.kelasWali||'',kelas:q.kelas||'',piket:q.piket||''});wr('guru:'+x.id,g);return'ok'}
 if(a=='guruLogin'){x=reg().filter(function(i){return i.id==p.sid})[0];if(!x||x.status!='aktif')throw'Sekolah tidak aktif';g=(rd('guru:'+x.id)||[]).filter(function(i){return i.nip==p.nip})[0];
 if(!g||!g.ph||g.ph!=H(x.id+':'+g.nip,p.pin))throw'NIP/PIN salah';if(g.status!='aktif')throw'Akun belum aktif, hubungi admin sekolah';r=info(x,{r:'guru',sid:x.id,nip:g.nip});r.u=pub(g);return r}
 s=ses(p.t);
@@ -96,10 +97,10 @@ if(s.r=='owner'){r=reg();
   if(a=='oReset'||(p.st=='aktif'&&!x.ph)){pin='ADM-'+np(6);x.ph=H(x.id,pin)}
   wr('sekolah',r);return{pin:pin}}}
 sid=s.r=='admin'?s.sid:p.sid;
-if(a=='sSet'){r=reg();x=r.filter(function(i){return i.id==sid})[0];if(!x)throw'Sekolah tidak ada';if(p.url&&p.url.indexOf('https://script.google.com/')!=0)throw'URL harus dari script.google.com';x.wa=p.wa;x.url=p.url;x.ksNama=p.ksNama;x.ksNip=p.ksNip;wr('sekolah',r);return'ok'}
+if(a=='sSet'){r=reg();x=r.filter(function(i){return i.id==sid})[0];if(!x)throw'Sekolah tidak ada';if(p.url&&p.url.indexOf('https://script.google.com/')!=0)throw'URL harus dari script.google.com';x.wa=nw(p.wa);x.url=p.url;x.ksNama=p.ksNama;x.ksNip=p.ksNip;wr('sekolah',r);return'ok'}
 g=rd('guru:'+sid)||[];
 if(a=='gList')return g.map(pub);
-if(a=='gAdd'){q=JSON.parse(p.d);if(g.some(function(i){return i.nip==q.nip}))throw'NIP sudah ada';pin=np(8);g.push({nip:String(q.nip),nama:q.nama,wa:q.wa||'',ph:H(sid+':'+q.nip,pin),status:'aktif',roles:q.roles||[],kelasWali:'',kelas:'',piket:''});wr('guru:'+sid,g);return{pin:pin}}
+if(a=='gAdd'){q=JSON.parse(p.d);if(g.some(function(i){return i.nip==q.nip}))throw'NIP sudah ada';pin=np(8);g.push({nip:String(q.nip),nama:q.nama,wa:nw(q.wa),ph:H(sid+':'+q.nip,pin),status:'aktif',roles:q.roles||[],kelasWali:'',kelas:'',piket:''});wr('guru:'+sid,g);return{pin:pin}}
 x=g.filter(function(i){return i.nip==p.nip})[0];if(!x)throw'Guru tidak ada';pin=null;
 if(a=='gSet'){if(['aktif','nonaktif','pending'].indexOf(p.st)<0)throw'Status tidak valid';x.status=p.st;if(p.st=='aktif'&&!x.ph){pin=np(8);x.ph=H(sid+':'+x.nip,pin)}}
 else if(a=='gReset'){pin=np(8);x.ph=H(sid+':'+x.nip,pin)}else throw'Aksi tidak dikenal';
@@ -203,7 +204,9 @@ const QUOTES=['Tenang dulu. Seduh dulu. Baru urus dunia.','Dunia ramai, kopi tet
 let REG=[],D={},S={},mem={},PINS={};
 const toast=t=>{const x=$('#toast');x.textContent=t;x.style.display='block';setTimeout(()=>x.style.display='none',3000)};
 const kopi=()=>{$('#ew').innerHTML=`<a href="${KOPI_URL}" target="_blank" rel="noopener"><button>☕ Traktir via ShopeePay</button></a>`;$('#modal').style.display='flex'};
-const wa=(n,t)=>`https://wa.me/${String(n).replace(/\D/g,'')}?text=${encodeURIComponent(t)}`;
+const nwa=n=>{let d=String(n||'').replace(/\D/g,'');if(!d)return'';d=d.replace(/^00/,'');if(d.startsWith('620'))d='62'+d.slice(3);if(d.startsWith('0'))d='62'+d.slice(1);else if(d.startsWith('8'))d='62'+d;return d.length>=10&&d.length<=15?d:''};
+const wa=(n,t)=>{const d=nwa(n);return d?`https://wa.me/${d}?text=${encodeURIComponent(t)}`:`https://wa.me/?text=${encodeURIComponent(t)}`};
+const salinTeks=t=>{const f=()=>{const a=document.createElement('textarea');a.value=t;a.style.position='fixed';a.style.opacity=0;document.body.appendChild(a);a.select();try{document.execCommand('copy');toast('Pesan disalin ☕')}catch(e){toast('Gagal menyalin')}a.remove()};navigator.clipboard?navigator.clipboard.writeText(t).then(()=>toast('Pesan disalin ☕'),f):f()};
 function ls(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem('rs_'+k));localStorage.setItem('rs_'+k,JSON.stringify(v))}catch(e){if(v===undefined)return mem[k];mem[k]=v}}
 // ===== API ke Apps Script owner (login, akun, AI) =====
 const jeda=ms=>new Promise(r=>setTimeout(r,ms));
@@ -240,11 +243,48 @@ async function panggilAI(p){const j=Date.now().toString(36)+Math.random().toStri
 while(Date.now()-t0<480000){try{const r=await api('ai',{p,j},100000);if(r&&r.w){await jeda(5000);continue}aiNote(r);return r.t}catch(e){if(!/Terlalu lama|terhubung|galat/.test(e.message))throw e;await jeda(4000)}}
 throw new Error('AI terlalu lama merespons, coba lagi sebentar lagi.')}
 // ===== unduh JPG / PDF =====
-async function dl(id,type,name){toast('Menyeduh file…');const el=document.getElementById(id),ex=[...el.querySelectorAll('.sc')].map(e=>[e,e.style.maxHeight,e.style.overflow]);ex.forEach(a=>{a[0].style.maxHeight='none';a[0].style.overflow='visible'});document.body.classList.add('exp');let c;try{c=await html2canvas(el,{scale:2,backgroundColor:'#fff'})}finally{document.body.classList.remove('exp');ex.forEach(a=>{a[0].style.maxHeight=a[1];a[0].style.overflow=a[2]})}
-if(type=='jpg'){const a=document.createElement('a');a.href=c.toDataURL('image/jpeg',.92);a.download=name+'.jpg';a.click();return}
-const L=c.width>c.height,W=L?297:210,H=L?210:297,p=new window.jspdf.jsPDF(L?'l':'p','mm','a4'),ph=Math.floor(c.width*H/W);
-for(let o=0;o<c.height;o+=ph){const s=document.createElement('canvas');s.width=c.width;s.height=Math.min(ph,c.height-o);s.getContext('2d').drawImage(c,0,o,c.width,s.height,0,0,c.width,s.height);if(o)p.addPage();p.addImage(s.toDataURL('image/jpeg',.9),'JPEG',0,0,W,s.height*W/c.width)}
-p.save(name+'.pdf')}
+async function dl(id,type,name){
+toast('Menyeduh file…');
+const el=document.getElementById(id);if(!el)return toast('Bagian yang diunduh tidak ditemukan');
+const SV=[],sv=(n,p,v)=>{SV.push([n,p,n.style[p]]);n.style[p]=v};
+const all=[el,...el.querySelectorAll('*')];
+let c,bk=[];
+try{
+// 1) ukur lebar sebenarnya (tabel/konten yang melebar di dalam kotak scroll)
+let need=el.clientWidth;
+all.forEach(n=>{const cs=getComputedStyle(n);if(/auto|scroll|hidden/.test(cs.overflowX)&&n.scrollWidth>n.clientWidth)need=Math.max(need,n.scrollWidth+(el.offsetWidth-n.clientWidth))});
+need=Math.ceil(Math.max(need,el.offsetWidth));
+// 2) buka semua batas scroll/tinggi pada elemen dan seluruh induknya
+const open=n=>{const cs=getComputedStyle(n);if(/auto|scroll/.test(cs.overflowX)||/auto|scroll/.test(cs.overflowY)){sv(n,'overflow','visible')}if(cs.maxHeight!='none')sv(n,'maxHeight','none')};
+all.forEach(open);
+for(let p=el.parentElement;p&&p!==document.body;p=p.parentElement){const cs=getComputedStyle(p);if(cs.overflowX!='visible'||cs.overflowY!='visible'){sv(p,'overflow','visible')}if(cs.maxHeight!='none')sv(p,'maxHeight','none')}
+sv(el,'width',need+'px');sv(el,'maxWidth','none');sv(el,'boxSizing','border-box');
+document.body.classList.add('exp');
+await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+const W=Math.ceil(Math.max(el.scrollWidth,el.offsetWidth)),H=Math.ceil(Math.max(el.scrollHeight,el.offsetHeight));
+// 3) skala aman agar kanvas tidak melebihi batas browser (terutama HP)
+const sc=Math.max(.5,Math.min(2,15000/W,15000/H,Math.sqrt(16e6/(W*H))));
+const eb=el.getBoundingClientRect();
+el.querySelectorAll('tr,p,h1,h2,h3,h4,li,img,.card,.bar,canvas,svg').forEach(n=>{bk.push((n.getBoundingClientRect().bottom-eb.top)*sc)});
+c=await html2canvas(el,{scale:sc,backgroundColor:'#fff',useCORS:true,width:W,height:H,windowWidth:Math.max(W+40,document.documentElement.clientWidth),windowHeight:H+40,scrollX:0,scrollY:-window.scrollY,logging:false});
+}catch(e){toast('Gagal membuat file: '+(e.message||e));return}
+finally{document.body.classList.remove('exp');SV.reverse().forEach(a=>{a[0].style[a[1]]=a[2]})}
+if(type=='jpg'){
+ // jika sangat tinggi, tetap satu gambar utuh
+ c.toBlob(b=>{if(!b)return toast('Gambar terlalu besar untuk dibuat');const u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download=name+'.jpg';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);toast('JPG siap ☕')},'image/jpeg',.92);return}
+if(!window.jspdf)return toast('Pustaka PDF belum termuat, coba lagi');
+const L=c.width>c.height*0.9||c.width/c.height>1.1,PW=L?297:210,PH=L?210:297,M=8,UW=PW-2*M,UH=PH-2*M,
+ p=new window.jspdf.jsPDF(L?'l':'p','mm','a4'),ph=Math.floor(c.width*UH/UW);
+let o=0,first=true;
+while(o<c.height-1){
+ let e=Math.min(o+ph,c.height);
+ if(e<c.height){const cand=bk.filter(b=>b>o+ph*.55&&b<=e);if(cand.length)e=Math.floor(Math.max(...cand))}
+ const hh=Math.max(1,e-o),s2=document.createElement('canvas');s2.width=c.width;s2.height=hh;
+ const g=s2.getContext('2d');g.fillStyle='#fff';g.fillRect(0,0,s2.width,hh);g.drawImage(c,0,o,c.width,hh,0,0,c.width,hh);
+ if(!first)p.addPage();first=false;
+ p.addImage(s2.toDataURL('image/jpeg',.92),'JPEG',M,M,UW,hh*UW/c.width);
+ o=e}
+p.save(name+'.pdf');toast('PDF siap ☕')}
 const dlb=(id,n)=>`<button class="g" onclick="dl('${id}','jpg','${n}')">🖼️ JPG</button><button class="g" onclick="dl('${id}','pdf','${n}')">📄 PDF</button>`;
 function foto(file,cb){const r=new FileReader();r.onload=()=>{const im=new Image();im.onload=()=>{const s=Math.min(1,480/im.width),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);cb(c.toDataURL('image/jpeg',.5))};im.src=r.result};r.readAsDataURL(file)}
 // ===== LOGIN =====
@@ -261,14 +301,18 @@ ${mode=='owner'?`<label>Kode masuk owner</label><input id="oc" type="password"><
 :`<label>Sekolah</label><select id="sk">${opt}</select>
 ${mode=='admin'?`<label>PIN Admin (contoh ADM-XXXXXX)</label><input id="ap"><button onclick="loginAdmin()">Masuk 🔑</button>`:`<label>NIP</label><input id="nip" inputmode="numeric"><label>PIN</label><input id="pn" type="password"><button onclick="loginGuru()">Masuk 🔑</button><button class="g" onclick="daftar()">Daftar akun guru baru</button><div id="dfm"></div>`}`}</div>`}
 async function daftarSekolah(){const nama=$('#sn').value.trim(),adm=$('#sa').value.trim(),w=$('#sw').value.trim();if(!nama||!adm||!w)return toast('Lengkapi data');
-if(!await T(api('daftarSekolah',{nama,adm,w})))return;window.open(wa(OWNER_WA,`Halo Owner, saya ${adm} mendaftarkan sekolah "${nama}" di Ruang Seduh (WA ${w}). Mohon di-ACC ☕`));toast('Terkirim! Tunggu ACC owner')}
+if(!await T(api('daftarSekolah',{nama,adm,w})))return;const pesan=`Halo Owner, saya ${adm} mendaftarkan sekolah "${nama}" di Ruang Seduh (WA ${w}). Mohon di-ACC ☕`;window._pd=pesan;
+$('#m').insertAdjacentHTML('beforeend',`<div class="card"><h3>✅ Pendaftaran tersimpan</h3><a href="${wa(OWNER_WA,pesan)}" target="_blank" rel="noopener"><button class="t">📲 Buka WhatsApp Owner</button></a><button class="g" onclick="salinTeks(window._pd)">📋 Salin pesan</button></div>`);
+try{window.open(wa(OWNER_WA,pesan),'_blank')}catch(e){}toast('Terkirim! Tunggu ACC owner')}
 function profForm(g={}){const r=g.roles||[];return`<label>Peran kamu (boleh lebih dari satu; semua guru otomatis ikut piket)</label><div>${PERAN.map(p=>`<label style="margin-right:8px"><input type="checkbox" style="width:auto;margin:0" class="pr" value="${p}" ${r.includes(p)?'checked':''}> ${p}</label>`).join('')}</div>
 <div class="row"><div><label>Kelas wali (mis. 8A)</label><input id="pw" value="${E(g.kelasWali||'')}"></div><div><label>Kelas binaan mapel/BK (pisah koma, kosong = semua)</label><input id="pb" value="${E(g.kelas||'')}"></div><div><label>Hari piket</label><select id="pk"><option value="">-</option>${HARI.slice(1).map(h=>`<option ${g.piket==h?'selected':''}>${h}</option>`).join('')}</select></div></div>`}
 const readProf=()=>({roles:[...document.querySelectorAll('.pr:checked')].map(x=>x.value),kelasWali:normK($('#pw').value),kelas:$('#pb').value.split(',').map(normK).filter(Boolean).join(','),piket:$('#pk').value});
 function daftar(){$('#dfm').innerHTML=`<hr><h3>Pendaftaran guru</h3><label>Nama lengkap</label><input id="dn"><label>NIP</label><input id="dp"><label>No. WA kamu (agar PIN bisa dikirim admin)</label><input id="dw">${profForm()}<button onclick="kirimDaftar()">Kirim ke WA Admin 📨</button>`}
 async function kirimDaftar(){const sid=$('#sk').value,sk=REG.find(x=>x.id==sid),nama=$('#dn').value.trim(),nip=$('#dp').value.trim();if(!sk||!nama||!nip)return toast('Lengkapi data');const pf=readProf();
 if(!await T(api('guruDaftar',{sid,d:{nip,nama,wa:$('#dw').value.trim(),...pf}})))return;
-window.open(wa(sk.wa,`Halo Admin ${sk.nama}, saya ${nama} (NIP ${nip}) mendaftar akun Ruang Seduh${pf.roles.length?' sebagai '+pf.roles.join(', '):''}. Mohon diaktifkan ☕`));toast('Terkirim! Tunggu admin mengaktifkan')}
+const pesan=`Halo Admin ${sk.nama}, saya ${nama} (NIP ${nip}) mendaftar akun Ruang Seduh${pf.roles.length?' sebagai '+pf.roles.join(', '):''}. Mohon diaktifkan ☕`;window._pd=pesan;
+$('#dfm').innerHTML=`<hr><div class="card"><h3>✅ Pendaftaran tersimpan</h3><p>Tekan tombol di bawah untuk memberi tahu admin lewat WhatsApp.</p><a href="${wa(sk.wa,pesan)}" target="_blank" rel="noopener"><button class="t">📲 Buka WhatsApp Admin</button></a><button class="g" onclick="salinTeks(window._pd)">📋 Salin pesan</button></div>`;
+try{window.open(wa(sk.wa,pesan),'_blank')}catch(e){}toast('Terkirim! Tunggu admin mengaktifkan')}
 async function loginGuru(){const sid=$('#sk').value;if(!sid)return;const r=await T(api('guruLogin',{sid,nip:$('#nip').value.trim(),pin:$('#pn').value.trim()}));if(!r)return;
 S={role:'guru',sid,t:r.t,url:r.url,u:r.u,sk:r};S.u.kelasWali=NK(S.u.kelasWali);S.u.kelas=normL(S.u.kelas);$('#m').innerHTML=LOAD;await loadSchool(sid);start('home')}
 async function loginAdmin(){const sid=$('#sk').value;if(!sid)return;const r=await T(api('adminLogin',{sid,pin:$('#ap').value.trim()}));if(!r)return;S={role:'admin',sid,t:r.t,url:r.url,sk:r};$('#m').innerHTML=LOAD;await loadSchool(sid);start('pending')}
@@ -293,7 +337,8 @@ function go(t){const n=$('#nav');n.style.display='flex';n.innerHTML=tabs().map(x
 const SK=()=>S.sk||{};
 const kelasList=()=>[...new Set(D.murid.map(m=>m.kelas))].sort();
 // ===== OWNER: kelola sekolah =====
-function pinBox(p,wn,txt){return p?`<p>PIN baru: <b>${E(p)}</b> <small>(tampil sekali, kirim sekarang)</small></p>${wn?`<a href="${wa(wn,txt)}" target="_blank"><button class="t">📲 Kirim PIN</button></a>`:''}`:''}
+function pinBox(p,wn,txt){if(!p)return'';const ok=!!nwa(wn),u=wa(wn,txt);window._pt=window._pt||{};const k='p'+Math.random().toString(36).slice(2,8);window._pt[k]=txt;
+return`<p>PIN baru: <b>${E(p)}</b> <small>(tampil sekali, kirim sekarang)</small></p><div class="row"><a href="${u}" target="_blank" rel="noopener"><button class="t">📲 Kirim PIN${ok?'':' (pilih kontak)'}</button></a><button class="g" onclick="salinTeks(window._pt['${k}'])">📋 Salin pesan</button></div>${ok?`<small>Tujuan: +${nwa(wn)}</small>`:'<small>⚠️ Nomor WA guru kosong/tidak valid — WhatsApp akan meminta pilih kontak, atau salin pesan lalu kirim manual.</small>'}`}
 function vSekolah(){const st={aktif:'✅',pending:'⏳',nonaktif:'⛔'};
 $('#m').innerHTML=`<div class="card"><h2>🧪 Tes AI</h2><p style="font-size:12px">Menguji semua API key × model sekarang dan menampilkan mana yang jalan, mana yang gagal, dan kenapa.</p><button onclick="tesAI()">▶️ Jalankan tes AI</button><div id="tesAi"></div></div><div class="card"><h2>🏰 Dashboard Owner</h2><p>Jalan pintas: tambah sekolah langsung aktif tanpa registrasi (mis. sekolahmu sendiri):</p><input id="sn" placeholder="Nama sekolah"><button onclick="addSk()">Tambah ✨</button></div>`+
 S.reg.map((s,i)=>`<div class="card"><h3>${st[s.status]} ${E(s.nama)}</h3><p>Admin: ${E(s.adminNama||'-')} · WA ${E(s.wa||'-')}<br>Database: ${s.url?'terhubung ✅':'belum diisi'} · PIN: ${s.hasPin?'sudah dibuat':'belum'}</p>${pinBox(PINS['s'+s.id],s.wa,`Sekolah ${s.nama} sudah aktif di Ruang Seduh ☕ PIN admin: ${PINS['s'+s.id]}`)}
