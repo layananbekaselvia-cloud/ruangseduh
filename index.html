@@ -218,7 +218,7 @@ o.unik=Object.keys(u).length;return o}
 <script>
 // ====== KONFIGURASI OWNER ======
 const OWNER_URL="https://script.google.com/macros/s/AKfycbxyPzw0p22mX20lq_qp9yz3YLPDX7NH3iuTRRBp0epLfNhCZDmiMCyckwjJkjelAvoV/exec";                  // WAJIB: URL Web App Apps Script OWNER (registry sekolah, login, AI)
-const TEMPLATE_URL="";               // link /copy Sheet Template Mitra
+const TEMPLATE_URL="https://docs.google.com/spreadsheets/d/1WvapR1SX269CQjLtHzf2GbWCSK9WL2zY3DowwQQAEVg/copy";               // link /copy Sheet Template Mitra
 const OWNER_WA="6281253895699";
 const KOPI_URL="https://app.u.shopeepay.co.id/u/WgJ6p3nsnBPpTubBb8Ys3";
 // Kode owner & API key AI ada di Script Properties (OWNER_CODE, GEMINI_KEY), BUKAN di file ini.
@@ -464,7 +464,7 @@ async function setSk(){const d={sid:S.sid,wa:$('#sw').value.trim(),url:$('#su').
 if(first){for(const k of['murid','absen','kasus','dok','info','sarpras','osis','ekskul','kombel','agenda','tamu','rpp','nilai','ajuan','link','rekap','kop'])if(D[k]!==undefined)save(k);toast('Tersimpan & data dikirim ke Sheet sekolah ✅');return}toast('Tersimpan')}
 async function tesUrl(){const u=$('#su').value.trim();if(!u)return toast('Isi URL dulu');try{const r=await fetch(u+'?k=ping');await r.json();toast('✅ Terhubung ke database sekolah')}catch(e){toast('❌ Belum terhubung. Cek deploy (akses Anyone) dan URL berakhiran /exec')}}
 async function jadiBK(){const r=await T(api('gAdd',{sid:S.sid,d:{nip:'OWNER',nama:'Owner',wa:OWNER_WA,roles:['Guru BK']}}));if(!r)return;PINS['OWNER']=r.pin;toast('Ditambahkan. PIN ada di tab Guru')}
-function vPanduanOld(){const o=S.role=='owner';$('#m').innerHTML=`<div class="card"><h2>📜 Panduan Langkah demi Langkah</h2><ol style="line-height:1.7">${o?`<li>Buat Google Sheet kosong (registry + akun + AI). Extensions → Apps Script → tempel kode di bawah → Deploy → New deployment → Web app (Execute as: Me, akses: Anyone).</li><li>Project Settings → Script Properties → tambah <b>OWNER_CODE</b> (kode masukmu) dan <b>GEMINI_KEY</b> (API key AI; opsional: <b>GEMINI_KEY2</b>…<b>GEMINI_KEY9</b> dari proyek Google Cloud BERBEDA, <b>GEMINI_MODELS</b> daftar model dipisah koma (boleh ditulis seperti di AI Studio, mis. <i>Gemini 3.5 Flash-Lite</i>; kosongkan agar dipilih otomatis), <b>AI_LIMIT</b> batas harian per sekolah, default 150). Keduanya tidak ada di HTML.</li><li>Tempel URL web app ke konstanta <b>OWNER_URL</b>, isi <b>TEMPLATE_URL</b>, lalu unggah HTML ke hosting.</li><li>Sekolah mendaftar lewat "Daftar Sekolah" → WA masuk ke kamu → tab Sekolah → Aktifkan → PIN muncul sekali, klik Kirim PIN. Reset PIN admin dan kelola semua guru dari tab Sekolah dan Guru.</li>`:`<li>${TEMPLATE_URL?'Klik <b>Salin Template</b> di bawah (jadi Sheet milik sekolahmu, kode sudah terpasang). Di Sheet salinan: Extensions → Apps Script → Deploy → New deployment → Web app (Execute as: Me, Anyone) → Authorize → salin URL.':'Buat Google Sheet baru. Extensions → Apps Script → tempel kode di bawah → Deploy → Web app (Anyone) → salin URL.'}</li><li>Tab Setelan → isi WA admin dan tempel URL tadi.</li><li>(Opsional) di Sheet buat tab <b>Murid</b> dengan header: Nama, Kelas, Tgl_Lahir, JK, Agama → tab Murid di web → Tarik. Atau impor lewat tempel.</li><li>Guru mendaftar dan memilih perannya sendiri → WA masuk ke kamu → tab Guru → Aktifkan → PIN muncul sekali, klik Kirim PIN. Lupa PIN guru: Reset PIN. Lupa PIN admin: hubungi owner.</li>`}</ol>
+function vPanduanOld(){const o=S.role=='owner';$('#m').innerHTML=`<div class="card"><h2>📜 Panduan Langkah demi Langkah</h2><ol style="line-height:1.7">${o?`<li>Buat Google Sheet kosong (registry + akun + AI). Extensions → Apps Script → tempel kode di bawah → Deploy → New deployment → Web app (Execute as: Me, akses: Anyone).</li><li>Project Settings → Script Properties → tambah <b>OWNER_CODE</b> (kode masukmu) dan <b>GEMINI_KEY</b> (API key AI; opsional: <b>GEMINI_KEY2</b>…<b>GEMINI_KEY20</b> dari proyek Google Cloud BERBEDA, <b>GEMINI_MODELS</b> daftar model dipisah koma (boleh ditulis seperti di AI Studio, mis. <i>Gemini 3.5 Flash-Lite</i>; kosongkan agar dipilih otomatis), <b>AI_LIMIT</b> batas harian per sekolah, default 150). Keduanya tidak ada di HTML.</li><li>Tempel URL web app ke konstanta <b>OWNER_URL</b>, isi <b>TEMPLATE_URL</b>, lalu unggah HTML ke hosting.</li><li>Sekolah mendaftar lewat "Daftar Sekolah" → WA masuk ke kamu → tab Sekolah → Aktifkan → PIN muncul sekali, klik Kirim PIN. Reset PIN admin dan kelola semua guru dari tab Sekolah dan Guru.</li>`:`<li>${TEMPLATE_URL?'Klik <b>Salin Template</b> di bawah (jadi Sheet milik sekolahmu, kode sudah terpasang). Di Sheet salinan: Extensions → Apps Script → Deploy → New deployment → Web app (Execute as: Me, Anyone) → Authorize → salin URL.':'Buat Google Sheet baru. Extensions → Apps Script → tempel kode di bawah → Deploy → Web app (Anyone) → salin URL.'}</li><li>Tab Setelan → isi WA admin dan tempel URL tadi.</li><li>(Opsional) di Sheet buat tab <b>Murid</b> dengan header: Nama, Kelas, Tgl_Lahir, JK, Agama → tab Murid di web → Tarik. Atau impor lewat tempel.</li><li>Guru mendaftar dan memilih perannya sendiri → WA masuk ke kamu → tab Guru → Aktifkan → PIN muncul sekali, klik Kirim PIN. Lupa PIN guru: Reset PIN. Lupa PIN admin: hubungi owner.</li>`}</ol>
 ${!o&&TEMPLATE_URL?`<a href="${TEMPLATE_URL}" target="_blank"><button class="t">📄 Salin Template</button></a>`:''}<label>Kode Apps Script</label><pre>${E($('#gs').textContent)}</pre><button onclick="navigator.clipboard.writeText($('#gs').textContent).then(()=>toast('Disalin'))">Salin kode</button></div>`}
 // ===== BERANDA =====
 function relKasus(){const u=S.u,all=D.kasus;if(has('Waka Kesiswaan','Kepala Sekolah')||u.piket==HARI[new Date().getDay()])return all;let a=[];
@@ -1380,19 +1380,107 @@ function mplList(){const s=new Set();['absen','nilai','rpp'].forEach(k=>(D[k]||[
 new MutationObserver(()=>{if(S.role!='guru')return;document.querySelectorAll('#m label').forEach(l=>{if(/^(mata pelajaran|mapel)/i.test(l.textContent.trim())){const i=l.nextElementSibling;if(i&&i.tagName=='INPUT'&&!i.getAttribute('list')){let d=$('#mpl');if(!d){d=document.createElement('datalist');d.id='mpl';document.body.appendChild(d)}d.innerHTML=mplList().map(m=>`<option value="${E(m)}">`).join('');i.setAttribute('list','mpl')}}})}).observe(document.getElementById('m'),{childList:true,subtree:true});
 // --- Panduan per peran ---
 const GD=[
-['Sekolah baru bergabung',['Buka aplikasi, pilih tab <b>Daftar Sekolah</b>, isi nama sekolah, nama admin, dan nomor WA admin, lalu kirim.','Tekan tombol WhatsApp yang muncul untuk memberi tahu owner, lalu tunggu di-ACC.','Owner mengirim <b>PIN admin</b> (ADM-XXXXXX) dan tautan <b>Template Google Sheets</b>. Skrip sudah tertanam di template, jadi tidak perlu menempel kode.','Salin template ke Google Drive sekolah, lalu <b>Deploy → Web app</b> (akses: Anyone) dan salin URL berakhiran /exec.','Masuk sebagai <b>Admin Sekolah</b>, buka <b>Setelan</b>, tempel URL, isi WA admin dan nama kepala sekolah, lalu klik <b>Tes koneksi</b>.','Impor data murid di menu <b>Murid</b>, lalu bagikan alamat aplikasi ke para guru.']],
-['Guru baru mendaftar akun',['Di halaman masuk pilih sekolah, klik <b>Daftar akun guru baru</b>.','Isi nama, NIP (kosongkan bila belum punya, sistem memberi ID login), WA, lalu centang peran, kelas wali/binaan, dan hari piket.','Kirim pesan WA ke admin sekolah yang muncul otomatis.','Tunggu admin mengaktifkan akun dan mengirim PIN. Masuk dengan NIP/ID dan PIN, lalu ganti PIN di <b>Profil</b>.']],
-['Guru yang sudah aktif',['Masuk dengan NIP/ID dan PIN, pilih sekolah.','Di <b>Beranda</b> baca pengumuman dan ubah peran/kelas lewat tombol <b>Ubah peran</b> bila perlu (peran Kepala Sekolah/Waka/BK perlu persetujuan admin).','Gunakan menu sesuai peran, lihat <b>Grafik</b>, <b>Keuangan</b> dan <b>Data Sekolah</b> untuk membaca berkas sekolah.','Lupa PIN? Hubungi admin sekolah untuk reset.']],
-['Admin sekolah',['Masuk lewat tab <b>Admin Sekolah</b> dengan PIN admin.','Menu <b>Guru</b>: aktifkan/nonaktifkan, reset PIN, edit NIP/nama, dan <b>Ubah peran & kelas binaan</b> semua guru.','Menu <b>Murid</b>: impor data (nama, kelas, tgl lahir, JK, agama) agar grafik dan absensi akurat.','Menu <b>Setelan</b>: URL database, WA, kepala sekolah. Menu <b>Grafik</b>, <b>Keuangan</b>, <b>Data Sekolah</b> bisa diakses penuh.']],
-['Kepala Sekolah',['Menu <b>Pimpinan</b> menampilkan ringkasan guru, kasus, dan rekap.','Menu Kesiswaan, Kurikulum, Sarpras, dan Surat dapat dibuka untuk memantau seluruh bidang.','Terbitkan pengumuman di <b>Beranda</b>; tinjau <b>Grafik</b> murid dan absensi.']],
-['Wakil Kepala Sekolah',['<b>Waka Kesiswaan</b>: menu Kesiswaan (kasus, rekap BK, absensi seluruh kelas).','<b>Waka Kurikulum</b>: menu Kurikulum dan Nilai; dapat memposting jadwal dan kalender akademik.','Keduanya bisa membuat pengumuman di Beranda.']],
-['Guru Mapel',['Isi <b>Absensi</b> tiap pertemuan; mata pelajaran yang pernah kamu isi otomatis muncul sebagai saran.','Buat <b>RPP/Modul Ajar</b> dengan bantuan AI di menu RPP.','Input dan rekap <b>Nilai</b>; unduh JPG/PDF/Word.']],
-['Wali Kelas',['Atur <b>kelas wali</b> di Profil.','Pantau absensi dan kasus kelasmu di menu <b>Absensi</b> dan <b>Kasus</b>; lihat rekap BK kelasmu.','Cetak dokumen kelas (rekap kelas asal) dalam JPG/PDF/Word.']],
-['Guru BK',['Catat layanan, tamu, dan catatan rahasia di menu BK; bagikan hanya dengan alasan khusus.','Lihat rekap layanan BK per jenis, bulan, dan kelas.','Unggah lampiran (maks 1 MB) pada catatan bila diperlukan.']],
-['Tata Usaha',['Buka <b>Surat</b> untuk administrasi surat.','Di <b>Beranda</b> terbitkan <b>pengumuman</b>: pilih jenis (mis. Undangan Kegiatan), isi judul, unggah berkas (maks ±250 KB), lalu Terbitkan.','Edit atau hapus pengumuman milikmu kapan saja.']],
-['Bendahara Sekolah',['Buka menu <b>Keuangan</b>.','Pilih jenis (RKAS, Laporan BOS, dll.), isi judul dan tahun, pilih gambar atau PDF, lalu Terbitkan.','Berkas disimpan hanya sebagai gambar JPG; semua guru dapat membaca/mengunduh JPG tetapi tidak dapat menyuntingnya. Simpan Word/Excel sebagai PDF dulu sebelum diunggah.']],
-['Operator Sekolah',['Buka menu <b>Data Sekolah</b>.','Unggah data Dapodik terbaru, info KIP/PIP, atau pembaruan data murid (gambar/PDF) dengan judul dan tahun.','Untuk pengumuman cepat, gunakan Beranda dengan jenis <b>Info KIP/PIP</b>.']]];
+['Sekolah baru bergabung (pemasangan oleh Admin)',[
+'<b>Daftar.</b> Di halaman masuk buka tab <b>Daftar Sekolah</b>, isi nama sekolah, nama admin, dan nomor WA admin (format 08xx atau 628xx), lalu kirim. Tekan <b>Buka WhatsApp Owner</b>; bila WA tidak terbuka, pakai <b>Salin pesan</b> dan kirim manual.',
+'<b>Tunggu ACC owner.</b> Owner mengaktifkan sekolah dan mengirim <b>PIN admin</b> berbentuk <b>ADM-XXXXXX</b>. PIN hanya tampil sekali di sisi owner, jadi simpan baik-baik.',
+'<b>Masuk.</b> Di halaman masuk pilih tab <b>Admin Sekolah</b>, pilih nama sekolah, ketik PIN admin. Segera ganti PIN di menu <b>Profil</b> (6–16 huruf/angka tanpa spasi).',
+'<b>Salin template.</b> Buka menu <b>Panduan</b> lalu tekan <b>Salin Template Sheets</b> (tautan: <b>'+TEMPLATE_URL+'</b>). Di halaman Google klik <b>Make a copy</b>. Gunakan akun Google resmi sekolah sebagai pemilik, karena seluruh data sekolah disimpan di Sheet ini. Kode Apps Script ikut tersalin otomatis.',
+'<b>Cek kode.</b> Di Sheet salinan buka <b>Extensions → Apps Script</b>. Bila file Code.gs kosong atau berbeda, tekan <b>Salin Kode Apps Script</b> di menu Panduan, hapus isi lama, tempel, lalu <b>Save</b> (ikon disket / Ctrl+S).',
+'<b>Deploy.</b> Di Apps Script klik <b>Deploy → New deployment</b>, klik ikon gerigi, pilih <b>Web app</b>. Isi <b>Execute as: Me</b> dan <b>Who has access: Anyone</b>, lalu <b>Deploy</b>.',
+'<b>Otorisasi.</b> Klik <b>Authorize access</b>, pilih akun. Bila muncul peringatan “Google hasn’t verified this app”, klik <b>Advanced → Go to (nama proyek) (unsafe) → Allow</b>. Ini wajar karena skrip milik sekolah sendiri.',
+'<b>Salin URL.</b> Salin <b>Web app URL</b> yang berakhiran <b>/exec</b> (jangan pakai yang berakhiran /dev).',
+'<b>Setelan.</b> Di aplikasi buka menu <b>Setelan</b>: isi No. WA admin, tempel URL Web App, isi nama dan NIP kepala sekolah, lalu <b>Simpan</b>. Tekan <b>Tes koneksi</b> sampai muncul ✅. Saat URL pertama kali disimpan, data yang ada otomatis dikirim ke Sheet (tab <b>Data</b> dan <b>File</b> dibuat sendiri). Isi juga kop surat di bagian bawah Setelan.',
+'<b>Data murid.</b> Menu <b>Murid</b>: tempel dari Excel/Sheets dengan kolom Nama, Kelas, Tgl Lahir, JK, Agama lalu <b>Impor</b>. Atau buat tab <b>Murid</b> di Sheet dengan header yang sama dan tekan <b>Tarik dari Google Sheets</b>.',
+'<b>Undang guru.</b> Bagikan alamat aplikasi kepada guru. Guru mendaftar sendiri, admin mengaktifkan (lihat panduan Admin Sekolah).',
+'<b>Perbarui kode.</b> Bila owner merilis kode baru: tempel kode di Apps Script, Save, lalu <b>Deploy → Manage deployments → ikon pensil → Version: New version → Deploy</b>. URL tidak berubah.',
+'💡 Jangan beri akses edit Sheet kepada guru atau murid. Data murid, akun, dan catatan BK ada di dalamnya. PIN tersimpan sebagai hash, bukan teks asli.'
+]],
+['Admin Sekolah (pekerjaan harian)',[
+'<b>Guru → aktifkan akun.</b> Guru yang mendaftar berstatus ⏳ pending. Klik <b>Aktifkan</b>, PIN 8 karakter muncul <b>sekali</b>; tekan <b>Kirim PIN</b> untuk mengirim lewat WA. Status juga bisa diubah ke nonaktif (mis. guru pindah).',
+'<b>Reset PIN guru.</b> Pilih guru → <b>Reset PIN</b> → kirim PIN baru. Guru yang salah PIN lama 5 kali di fitur ganti PIN harus menunggu 15 menit.',
+'<b>Tambah guru manual.</b> Isi nama, NIP, WA, peran. NIP dikosongkan bila belum punya: sistem memberi <b>ID login T-XXXX</b>. Gunakan ID itu di kolom “NIP / ID Login”.',
+'<b>Ubah NIP/nama.</b> Bila NIP berubah, guru masuk dengan NIP baru; PIN tetap sama. Beri tahu guru bersangkutan.',
+'<b>Ubah peran &amp; kelas binaan.</b> Tombol <b>Ubah peran &amp; kelas binaan</b> pada tiap guru. Peran sensitif (Kepala Sekolah, Waka Kesiswaan, Guru BK) yang dipilih guru sendiri perlu persetujuan admin.',
+'<b>Murid, Kegiatan, Tautan.</b> Murid: impor/tarik data. Kegiatan: agenda sekolah, admin mengelola penuh. Tautan: bagikan tautan penting (kategori bebas) untuk semua guru.',
+'<b>Grafik, Keuangan, Data Sekolah.</b> Admin dapat membaca dan mengunggah berkas di Keuangan dan Data Sekolah, serta mengunduh Grafik murid dan absensi sebagai JPG.',
+'<b>Profil.</b> Ganti PIN admin. Lupa PIN admin: tombol WA di Profil mengirim permintaan reset ke owner.',
+'<b>Panduan.</b> Pilih peran di daftar pilihan, atau biarkan “Panduan lengkap”, lalu <b>Unduh PDF</b> untuk dicetak atau dibagikan.'
+]],
+['Guru baru mendaftar akun',[
+'Di halaman masuk pilih sekolah, klik <b>Daftar akun guru baru</b>.',
+'Isi nama, NIP (kosongkan bila belum punya; sistem memberi ID login yang <b>wajib dicatat</b>), nomor WA, lalu centang peran, kelas wali/binaan, dan hari piket.',
+'Kirim pesan WA yang muncul otomatis ke admin sekolah.',
+'Tunggu admin mengaktifkan dan mengirim PIN. Masuk dengan NIP/ID dan PIN, lalu ganti PIN di <b>Profil</b>.'
+]],
+['Semua guru (setelah akun aktif)',[
+'<b>Masuk.</b> Pilih sekolah, isi NIP/ID dan PIN. Sesi berlaku sekitar 6 jam; bila muncul “Sesi habis”, masuk lagi.',
+'<b>Beranda.</b> Baca pengumuman, kasus terbaru, dan ubah peran/kelas lewat <b>Ubah peran</b>.',
+'<b>Absensi, Kasus, RPP, Dokumen, Kegiatan.</b> Menu menyesuaikan peranmu. Tampilan baca-saja berarti perannya tidak punya hak mengisi.',
+'<b>Izin &amp; Ajuan.</b> Ajukan izin lewat menu <b>Izin</b>; status dan balasan terlihat di <b>Ajuan</b>.',
+'<b>Tautan, Grafik, Keuangan, Data Sekolah.</b> Dapat dibaca semua guru; berkas hanya berbentuk gambar JPG (tidak bisa disunting).',
+'<b>Profil.</b> Ganti PIN, nama, dan tanda tangan (dipakai pada dokumen cetak).',
+'<b>Unduhan.</b> Dokumen bisa diunduh sebagai JPG, PDF, atau Word sesuai tombol yang tersedia.',
+'Lupa PIN? Tekan tombol WA di <b>Profil</b> atau hubungi admin untuk reset.'
+]],
+['Kepala Sekolah',[
+'Menu <b>Pimpinan</b>: ringkasan jumlah guru (aktif/pending/nonaktif per peran), kasus, dan rekap bulanan.',
+'Menu Kesiswaan, Kurikulum, Sarpras, dan Surat dapat dibuka untuk memantau seluruh bidang.',
+'Menu <b>Ajuan</b>: tinjau dan proses izin atau ajuan guru.',
+'Terbitkan pengumuman di <b>Beranda</b>; lihat <b>Grafik</b> murid dan absensi.',
+'Rekap layanan BK dapat dilihat tanpa membuka isi catatan rahasia.'
+]],
+['Wakil Kepala Sekolah',[
+'<b>Waka Kesiswaan:</b> menu Kesiswaan (kasus, rekap BK, absensi seluruh kelas), dan Kegiatan penuh.',
+'<b>Waka Kurikulum:</b> menu Kurikulum (Jadwal Pelajaran, Kalender Akademik, Perangkat Ajar) dan Nilai.',
+'Keduanya dapat membuat pengumuman di Beranda.'
+]],
+['Guru Mapel',[
+'<b>Absensi:</b> pilih kelas dan mapel, tandai Hadir/Sakit/Izin/Alpa (klik kotak untuk bergantian). Mapel yang pernah diisi muncul sebagai saran.',
+'<b>RPP/Modul Ajar:</b> isi data, tekan buat; AI bekerja ± beberapa detik sampai menit. Perhatikan <b>kuota AI harian sekolah</b> yang tampil; kembali pukul 00.00 WIB.',
+'<b>Nilai:</b> input, rekap, dan deskripsi capaian rapor; unduh JPG/PDF/Word.',
+'<b>Dokumen:</b> catat dokumentasi pembelajaran dengan foto.'
+]],
+['Wali Kelas',[
+'Atur <b>kelas wali</b> di Profil atau lewat <b>Ubah peran</b> di Beranda (tanpa kelas wali, rekap kelas tidak bisa dibuka).',
+'Pantau <b>Absensi</b> dan <b>Kasus</b> kelasmu; ubah kotak absen untuk koreksi.',
+'Lihat rekap layanan BK khusus kelasmu (tanpa isi rahasia).',
+'Cetak dokumen kelas dalam JPG/PDF/Word.'
+]],
+['Guru BK',[
+'Catat <b>layanan</b>, <b>tamu</b>, dan <b>catatan rahasia</b> di menu Dokumen/BK. Hanya Guru BK yang dapat menyimpan catatan rahasia.',
+'Berbagi catatan (Kepala Sekolah, Waka Kesiswaan, Wali Kelas, Guru BK lain) wajib disertai <b>alasan keadaan khusus</b>.',
+'Lampiran maksimal 1 MB per berkas. Hanya pembuat catatan yang dapat mengubah/menghapus.',
+'Rekap layanan per jenis, bulan, dan kelas tersedia di tab Rekap.'
+]],
+['Tata Usaha',[
+'Menu <b>Surat</b>: agenda surat masuk/keluar.',
+'Di <b>Beranda</b> terbitkan pengumuman: pilih jenis (mis. Undangan Kegiatan), isi judul, unggah berkas (maks ± 250 KB), lalu Terbitkan.',
+'Edit atau hapus pengumuman milikmu kapan saja.'
+]],
+['Bendahara Sekolah',[
+'Buka menu <b>Keuangan</b>.',
+'Pilih jenis (RKAS, Laporan BOS, Laporan Keuangan Lainnya), isi judul dan tahun, pilih gambar atau PDF (maks 30 halaman), lalu <b>Terbitkan</b>.',
+'Berkas disimpan sebagai gambar JPG; guru dapat membaca/mengunduh JPG tetapi tidak dapat menyuntingnya. Simpan Word/Excel sebagai PDF dulu.',
+'Hapus berkas lama dengan tombol <b>Hapus</b> agar Sheet tidak penuh.'
+]],
+['Operator Sekolah',[
+'Buka menu <b>Data Sekolah</b>.',
+'Unggah Dapodik terbaru, info KIP/PIP, atau pembaruan data murid (gambar/PDF) dengan judul dan tahun.',
+'Untuk pengumuman cepat gunakan Beranda dengan jenis <b>Info KIP/PIP</b>.'
+]],
+['Sarana Prasarana (Sarpras)',[
+'Buka menu <b>Sarpras</b> untuk mencatat barang/sarana beserta kondisi dan jumlahnya.',
+'Ringkasan jumlah per kondisi tampil di bagian atas; Kepala Sekolah dapat memantaunya.'
+]],
+['Masalah umum &amp; solusi',[
+'<b>Tes koneksi gagal:</b> pastikan Deploy dengan akses <b>Anyone</b>, URL berakhiran <b>/exec</b>, dan sudah Authorize.',
+'<b>Data tidak muncul / gagal sinkron:</b> cek URL di Setelan, lalu muat ulang halaman. Setelah mengubah kode, lakukan <b>New version</b> pada Manage deployments.',
+'<b>“Sesi habis”:</b> masuk ulang. <b>“PIN salah atau sekolah belum aktif”:</b> pastikan owner sudah mengaktifkan sekolah.',
+'<b>AI gagal/lambat:</b> tunggu sebentar dan coba lagi; bila kuota harian habis, tunggu besok pukul 00.00 WIB atau minta owner menaikkan <b>AI_LIMIT</b>.',
+'<b>Lupa PIN:</b> guru → admin; admin → owner (tombol WA di Profil).'
+]]];
 let gdS='all';
-function vPanduan(){if(S.role=='owner')return vPanduanOld();const L=GD.filter(x=>gdS=='all'||x[0]==gdS);
-$('#m').innerHTML=`<div class="card"><h2>📜 Panduan Aplikasi Ruang Seduh</h2><select onchange="gdS=this.value;vPanduan()"><option value="all">Panduan lengkap (semua peran)</option>${GD.map(x=>`<option ${x[0]==gdS?'selected':''}>${x[0]}</option>`).join('')}</select><button onclick="dl('pnd','pdf','panduan-ruang-seduh')">📄 Unduh PDF</button></div><div class="card"><div id="pnd" class="paper doc"><h2 style="text-align:center">Panduan Aplikasi Ruang Seduh</h2>${L.map(x=>`<h3>${x[0]}</h3><ol>${x[1].map(s=>`<li>${s}</li>`).join('')}</ol>`).join('')}</div></div>`}
+const salinKode=()=>{const t=$('#gs').textContent;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast('Kode Apps Script disalin ☕')).catch(()=>salinTeks(t))};
+function vPanduan(){if(S.role=='owner')return vPanduanOld();const L=GD.filter(x=>gdS=='all'||x[0]==gdS),adm=S.role=='admin';
+$('#m').innerHTML=`<div class="card"><h2>📜 Panduan Aplikasi Ruang Seduh</h2><select onchange="gdS=this.value;vPanduan()"><option value="all">Panduan lengkap (semua peran)</option>${GD.map(x=>`<option value="${E(x[0])}" ${x[0]==gdS?'selected':''}>${x[0]}</option>`).join('')}</select><button onclick="dl('pnd','pdf','panduan-ruang-seduh')">📄 Unduh PDF</button></div>`+(adm?`<div class="card" style="border-color:var(--cher)"><h3>🧰 Perangkat pemasangan Admin</h3><p style="font-size:13px">Salin template lebih dulu, lalu ikuti langkah pada <b>Sekolah baru bergabung</b>. Tombol kode dipakai bila Code.gs di Sheet salinan kosong atau perlu diperbarui.</p><div class="row">${TEMPLATE_URL?`<a href="${TEMPLATE_URL}" target="_blank" rel="noopener"><button class="t">📄 Salin Template Sheets</button></a>`:''}<button onclick="salinKode()">📋 Salin Kode Apps Script</button></div><details><summary>Lihat kode</summary><pre style="max-height:260px;overflow:auto">${E($('#gs').textContent)}</pre></details></div>`:'')+`<div class="card"><div id="pnd" class="paper doc"><h2 style="text-align:center">Panduan Aplikasi Ruang Seduh</h2><p style="text-align:center;font-size:12px">${E(SK().nama||'')} · ${today()}</p>${L.map((x,i)=>`<h3>${gdS=='all'?(i+1)+'. ':''}${x[0]}</h3><ol>${x[1].map(s=>`<li style="margin-bottom:4px">${s}</li>`).join('')}</ol>`).join('')}</div></div>`}
 </script></body></html>
