@@ -1,0 +1,42 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ruang Seduh</title>
+<style>:root{--esp:#2a1a12;--cream:#f7ecd8;--latte:#d9b48a;--car:#f0a43a;--teal:#18c2b0;--cher:#ec5565;--ink:#1a0f09}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%}
+body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;color:var(--cream);background:var(--esp) radial-gradient(#3a2418 2px,transparent 2px) 0 0/26px 26px}
+header{padding:10px 14px;background:var(--esp);border-bottom:4px solid var(--ink)}header h1{font-family:Impact,'Arial Black',sans-serif;font-size:28px;letter-spacing:2px;margin:0;color:var(--car);text-shadow:3px 3px 0 var(--ink)}
+main{padding:14px;max-width:520px;margin:auto}.card{background:var(--cream);color:var(--ink);border:4px solid var(--ink);border-radius:18px;padding:16px;box-shadow:5px 5px 0 var(--ink)}
+h2{font-family:Impact,'Arial Black',sans-serif;letter-spacing:1px;text-align:center;margin:4px 0}label{display:block;font-weight:700;font-size:13px;margin:10px 0 3px}
+input,select{width:100%;padding:11px;border:3px solid var(--ink);border-radius:12px;font:inherit;background:#fff;color:var(--ink)}
+button{margin-top:10px;padding:11px 16px;border:3px solid var(--ink);border-radius:12px;font:inherit;font-weight:700;background:var(--car);color:var(--ink);box-shadow:3px 3px 0 var(--ink);cursor:pointer}button.g{background:var(--latte)}button:disabled{opacity:.6}
+.row{display:flex;gap:6px;flex-wrap:wrap}.msg{font-size:13px;min-height:20px;margin-top:8px;word-break:break-word}.sm{font-size:11px;opacity:.65;margin-top:8px}</style></head><body>
+<header><h1>☕ RUANG SEDUH</h1></header><main><div class="card" id="bx"><p>Memuat…</p></div></main>
+<script>
+(()=>{const OWNER_URL="https://script.google.com/macros/s/AKfycbxyPzw0p22mX20lq_qp9yz3YLPDX7NH3iuTRRBp0epLfNhCZDmiMCyckwjJkjelAvoV/exec",LS='rsg_',ID='rsg-db';
+let mode='sekolah',L=[];
+const $=s=>document.querySelector(s),E=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem(LS+k);if(v===null)localStorage.removeItem(LS+k);else localStorage.setItem(LS+k,v)}catch(e){return null}};
+const msg=t=>{const m=$('#ms');if(m)m.textContent=t||''};
+async function call(b,ms){const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),ms||45000);try{const r=await fetch(OWNER_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(b),signal:ac.signal}),j=await r.json();if(j&&j.e)throw new Error(j.e);return j}catch(e){throw new Error(e.name=='AbortError'?'Server lama merespons, coba lagi.':(e.message||'Tidak terhubung ke server'))}finally{clearTimeout(tm)}}
+const idb=()=>new Promise((ok,no)=>{try{const r=indexedDB.open(ID,1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}catch(e){no(e)}});
+async function cget(){try{const d=await idb();return await new Promise(ok=>{const q=d.transaction('k').objectStore('k').get('app');q.onsuccess=()=>ok(q.result||null);q.onerror=()=>ok(null)})}catch(e){return null}}
+async function cput(o){try{const d=await idb();await new Promise(ok=>{const t=d.transaction('k','readwrite');t.objectStore('k').put(o,'app');t.oncomplete=ok;t.onerror=ok})}catch(e){}}
+async function unzip(b64){const u=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));return await new Response(new Blob([u]).stream().pipeThrough(new DecompressionStream('gzip'))).text()}
+async function jalan(html){if(document.readyState!='complete')await new Promise(r=>addEventListener('load',r,{once:true}));document.open();document.write(html);document.close()}
+async function masuk(auto){const sid=mode=='owner'?'':($('#sk')?$('#sk').value:ls('sid')),ac=mode=='owner'?'':($('#ac')?$('#ac').value.trim():ls('ac')),oc=mode=='owner'?($('#oc')?$('#oc').value:''):'';
+ if(mode!='owner'&&(!sid||!ac)){if(!auto)msg('Pilih sekolah dan isi kode akses.');return false}if(mode=='owner'&&!oc){if(!auto)msg('Isi kode owner.');return false}
+ const b=$('#go');if(b)b.disabled=true;msg('Memeriksa kode akses…');const c=await cget();let r;
+ try{r=await call({a:'appGet',sid,ac,oc,v:c&&c.v||''})}catch(e){if(c&&c.d&&/server|terhubung|Server/i.test(e.message)){msg('Server tidak terjangkau, memakai salinan terakhir…');try{return await jalan(await unzip(c.d)),true}catch(x){}}
+  if(b)b.disabled=false;if(/Kode akses salah|dinonaktifkan/.test(e.message)&&auto){ls('ac',null)}msg(e.message);return false}
+ let d=r.d||(c&&c.d);if(!d){if(b)b.disabled=false;msg('Kode aplikasi belum tersedia.');return false}
+ if(r.d)await cput({v:r.v,d:r.d});if(mode!='owner'){ls('sid',sid);ls('ac',ac)}
+ try{await jalan(await unzip(d))}catch(e){if(b)b.disabled=false;msg('Gagal membuka aplikasi: '+e.message);return false}return true}
+async function loadList(){try{L=await call({a:'list'},20000);if(!Array.isArray(L))L=[]}catch(e){L=[];msg(e.message)}}
+function tampil(){const sid=ls('sid')||'';$('#bx').innerHTML=`<h2>RUANG SEDUH</h2><div class="row">${[['sekolah','Masuk Sekolah'],['daftar','Daftar Sekolah'],['owner','Owner']].map(x=>`<button class="${mode==x[0]?'':'g'}" onclick="rsgMode('${x[0]}')">${x[1]}</button>`).join('')}</div><hr>`+
+ (mode=='owner'?`<label>Kode masuk owner</label><input id="oc" type="password" autocomplete="off"><button id="go" onclick="masuk()">Buka aplikasi 🔑</button>`
+ :mode=='daftar'?`<label>Nama sekolah</label><input id="sn"><label>Nama admin sekolah</label><input id="sa"><label>No. WA admin (628xxx)</label><input id="sw" inputmode="tel"><button onclick="daftar()">Kirim ke Owner 📨</button><p class="sm">Setelah owner menyetujui, PIN admin dan kode akses dikirim ke WA Anda.</p>`
+ :`<label>Sekolah</label><select id="sk"><option value="">Pilih sekolah…</option>${L.map(s=>`<option value="${E(s.id)}" ${s.id==sid?'selected':''}>${E(s.nama)}</option>`).join('')}</select><label>Kode akses sekolah</label><input id="ac" autocapitalize="characters" autocomplete="off" placeholder="8 huruf/angka dari admin sekolah" value="${E(ls('ac')||'')}"><button id="go" onclick="masuk()">Buka aplikasi 🔑</button><p class="sm">Kode akses cukup dimasukkan sekali di perangkat ini. Tanyakan ke admin sekolah bila belum punya.</p>`)+`<div class="msg" id="ms"></div>`}
+async function daftar(){const n=$('#sn').value.trim(),a=$('#sa').value.trim(),w=$('#sw').value.trim();if(!n||!a||!w)return msg('Lengkapi data.');msg('Mengirim…');try{await call({a:'daftarSekolah',nama:n,adm:a,w});msg('✅ Pendaftaran terkirim. Hubungi owner lewat WhatsApp agar segera disetujui.')}catch(e){msg(e.message)}}
+window.rsgMode=x=>{mode=x;tampil()};window.masuk=masuk;window.daftar=daftar;
+(async()=>{try{const m=/[#&]k=([a-z0-9]+)\.([A-Za-z0-9]+)/.exec(location.hash);if(m){ls('sid',m[1]);ls('ac',m[2].toUpperCase());history.replaceState(null,'',location.pathname+location.search)}}catch(e){}
+await loadList();tampil();if(ls('sid')&&ls('ac')){mode='sekolah';if(await masuk(true))return}})();
+})();
+</script></body></html>
